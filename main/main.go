@@ -35,7 +35,7 @@ var Video = &ArticleType{"dic.nicovideo.jp/b/v/", "【動】"}
 var Market = &ArticleType{"dic.nicovideo.jp/b/i/", "【市】"}
 
 // Community is community article type.
-var Community = &ArticleType{"dic.nicovideo.jp/c/v/", "【コ】"}
+var Community = &ArticleType{"dic.nicovideo.jp/b/c/", "【コ】"}
 
 // Other is undefined article type.
 var Other = &ArticleType{"", "【？】"}
