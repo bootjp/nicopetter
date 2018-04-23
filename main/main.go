@@ -20,25 +20,26 @@ import (
 const dateFormat = "2006-01-02 15:04:05"
 
 // General is general article type.
-var General = &ArticleType{"dic.nicovideo.jp/b/a/", "【単】"}
+var (
+	General = &ArticleType{"dic.nicovideo.jp/b/a/", "【単】"}
+	// User is user article type.
+	User = &ArticleType{"dic.nicovideo.jp/b/u/", "【ユ】"}
 
-// User is user article type.
-var User = &ArticleType{"dic.nicovideo.jp/b/u/", "【ユ】"}
+	// Live is live article type.
+	Live = &ArticleType{"dic.nicovideo.jp/b/l/", "【生】"}
 
-// Live is live article type.
-var Live = &ArticleType{"dic.nicovideo.jp/b/l/", "【生】"}
+	// Video is movie article type.
+	Video = &ArticleType{"dic.nicovideo.jp/b/v/", "【動】"}
 
-// Video is movie article type.
-var Video = &ArticleType{"dic.nicovideo.jp/b/v/", "【動】"}
+	// Market is ichiba article type.
+	Market = &ArticleType{"dic.nicovideo.jp/b/i/", "【市】"}
 
-// Market is ichiba article type.
-var Market = &ArticleType{"dic.nicovideo.jp/b/i/", "【市】"}
+	// Community is community article type.
+	Community = &ArticleType{"dic.nicovideo.jp/b/c/", "【コ】"}
 
-// Community is community article type.
-var Community = &ArticleType{"dic.nicovideo.jp/b/c/", "【コ】"}
-
-// Other is undefined article type.
-var Other = &ArticleType{"", "【？】"}
+	// Other is undefined article type.
+	Other = &ArticleType{"", "【？】"}
+)
 
 // ArticleType is Nicopedia of article type.
 type ArticleType struct {
