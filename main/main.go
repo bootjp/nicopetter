@@ -19,8 +19,8 @@ import (
 
 const dateFormat = "2006-01-02 15:04:05"
 
-// General is general article type.
 var (
+	// General is general article type.
 	General = &ArticleType{"dic.nicovideo.jp/b/a/", "【単】"}
 	// User is user article type.
 	User = &ArticleType{"dic.nicovideo.jp/b/u/", "【ユ】"}
