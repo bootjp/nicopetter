@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+<channel>
+	<title>うえるかむとぅあんだぁぐらうんど</title>
+	<atom:link href="https://bootjp.me/feed/" rel="self" type="application/rss+xml" />
+	<link>https://bootjp.me</link>
+	<description>なんか書く</description>
+	<lastBuildDate>Sun, 22 Apr 2018 00:00:14 +0000</lastBuildDate>
+	<language>ja</language>
+	<sy:updatePeriod>hourly</sy:updatePeriod>
+	<sy:updateFrequency>1</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=4.9.5</generator>
+
+<image>
+	<url>https://bootjp.me/wp-content/uploads/cropped-DXlA25_V4AAyD-y_Fotor-2-32x32.jpg</url>
+	<title>うえるかむとぅあんだぁぐらうんど</title>
+	<link>https://bootjp.me</link>
+	<width>32</width>
+	<height>32</height>
+</image>
+<atom:link rel="hub" href="https://pubsubhubbub.appspot.com"/><atom:link rel="hub" href="https://pubsubhubbub.superfeedr.com"/>	<item>
+		<title>社会人学生に学割が効くサービス一覧</title>
+		<link>https://bootjp.me/2018/04/01/%e7%a4%be%e4%bc%9a%e4%ba%ba%e5%ad%a6%e7%94%9f%e3%81%ab%e5%ad%a6%e5%89%b2%e3%81%8c%e5%8a%b9%e3%81%8f%e3%82%b5%e3%83%bc%e3%83%93%e3%82%b9%e4%b8%80%e8%a6%a7/</link>
+		<comments>https://bootjp.me/2018/04/01/%e7%a4%be%e4%bc%9a%e4%ba%ba%e5%ad%a6%e7%94%9f%e3%81%ab%e5%ad%a6%e5%89%b2%e3%81%8c%e5%8a%b9%e3%81%8f%e3%82%b5%e3%83%bc%e3%83%93%e3%82%b9%e4%b8%80%e8%a6%a7/#respond</comments>
+		<pubDate>Sun, 01 Apr 2018 00:33:06 +0000</pubDate>
+		<dc:creator><![CDATA[bootjp]]></dc:creator>
+				<category><![CDATA[メモ]]></category>
+		<category><![CDATA[備忘録]]></category>
+
+		<guid isPermaLink="false">https://bootjp.me/?p=1285</guid>
+		<description><![CDATA[今月から社会人大学生になったので自分が使う可能性があり学割が効くサービスをまとめておく Github プライベートリ… <span class="read-more"><a href="https://bootjp.me/2018/04/01/%e7%a4%be%e4%bc%9a%e4%ba%ba%e5%ad%a6%e7%94%9f%e3%81%ab%e5%ad%a6%e5%89%b2%e3%81%8c%e5%8a%b9%e3%81%8f%e3%82%b5%e3%83%bc%e3%83%93%e3%82%b9%e4%b8%80%e8%a6%a7/">Read More &#187;</a></span>]]></description>
+		<wfw:commentRss>https://bootjp.me/2018/04/01/%e7%a4%be%e4%bc%9a%e4%ba%ba%e5%ad%a6%e7%94%9f%e3%81%ab%e5%ad%a6%e5%89%b2%e3%81%8c%e5%8a%b9%e3%81%8f%e3%82%b5%e3%83%bc%e3%83%93%e3%82%b9%e4%b8%80%e8%a6%a7/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+		<item>
+		<title>High Sierraでシステム拡張がブロックされたとき</title>
+		<link>https://bootjp.me/2018/02/21/high-sierra%e3%81%a7%e3%82%b7%e3%82%b9%e3%83%86%e3%83%a0%e6%8b%a1%e5%bc%b5%e3%81%8c%e3%83%96%e3%83%ad%e3%83%83%e3%82%af%e3%81%95%e3%82%8c%e3%81%9f%e3%81%a8%e3%81%8d/</link>
+		<comments>https://bootjp.me/2018/02/21/high-sierra%e3%81%a7%e3%82%b7%e3%82%b9%e3%83%86%e3%83%a0%e6%8b%a1%e5%bc%b5%e3%81%8c%e3%83%96%e3%83%ad%e3%83%83%e3%82%af%e3%81%95%e3%82%8c%e3%81%9f%e3%81%a8%e3%81%8d/#respond</comments>
+		<pubDate>Tue, 20 Feb 2018 22:58:57 +0000</pubDate>
+		<dc:creator><![CDATA[bootjp]]></dc:creator>
+				<category><![CDATA[メモ]]></category>
+		<category><![CDATA[備忘録]]></category>
+		<category><![CDATA[技術系]]></category>
+
+		<guid isPermaLink="false">https://bootjp.me/?p=1221</guid>
+		<description><![CDATA[システム拡張（カーネル拡張）がブロックされたときの対処法 以下の画像のような状態を想定している。 キャプチャを撮り損… <span class="read-more"><a href="https://bootjp.me/2018/02/21/high-sierra%e3%81%a7%e3%82%b7%e3%82%b9%e3%83%86%e3%83%a0%e6%8b%a1%e5%bc%b5%e3%81%8c%e3%83%96%e3%83%ad%e3%83%83%e3%82%af%e3%81%95%e3%82%8c%e3%81%9f%e3%81%a8%e3%81%8d/">Read More &#187;</a></span>]]></description>
+		<wfw:commentRss>https://bootjp.me/2018/02/21/high-sierra%e3%81%a7%e3%82%b7%e3%82%b9%e3%83%86%e3%83%a0%e6%8b%a1%e5%bc%b5%e3%81%8c%e3%83%96%e3%83%ad%e3%83%83%e3%82%af%e3%81%95%e3%82%8c%e3%81%9f%e3%81%a8%e3%81%8d/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+		<item>
+		<title>AWS S3でオブジェクトキーの命名に気をつける話</title>
+		<link>https://bootjp.me/2018/02/14/aws-s3%e3%81%a7%e3%82%aa%e3%83%96%e3%82%b8%e3%82%a7%e3%82%af%e3%83%88%e3%82%ad%e3%83%bc%e3%81%ae%e5%91%bd%e5%90%8d%e3%81%ab%e6%b0%97%e3%82%92%e3%81%a4%e3%81%91%e3%82%8b%e8%a9%b1/</link>
+		<comments>https://bootjp.me/2018/02/14/aws-s3%e3%81%a7%e3%82%aa%e3%83%96%e3%82%b8%e3%82%a7%e3%82%af%e3%83%88%e3%82%ad%e3%83%bc%e3%81%ae%e5%91%bd%e5%90%8d%e3%81%ab%e6%b0%97%e3%82%92%e3%81%a4%e3%81%91%e3%82%8b%e8%a9%b1/#respond</comments>
+		<pubDate>Wed, 14 Feb 2018 03:59:12 +0000</pubDate>
+		<dc:creator><![CDATA[bootjp]]></dc:creator>
+				<category><![CDATA[メモ]]></category>
+		<category><![CDATA[備忘録]]></category>
+		<category><![CDATA[技術系]]></category>
+
+		<guid isPermaLink="false">https://bootjp.me/?p=1215</guid>
+		<description><![CDATA[以前に smoocy を作っている際にS3を使っていて日に日にレスポンスが遅くなりS3の手前に設置しているNginx… <span class="read-more"><a href="https://bootjp.me/2018/02/14/aws-s3%e3%81%a7%e3%82%aa%e3%83%96%e3%82%b8%e3%82%a7%e3%82%af%e3%83%88%e3%82%ad%e3%83%bc%e3%81%ae%e5%91%bd%e5%90%8d%e3%81%ab%e6%b0%97%e3%82%92%e3%81%a4%e3%81%91%e3%82%8b%e8%a9%b1/">Read More &#187;</a></span>]]></description>
+		<wfw:commentRss>https://bootjp.me/2018/02/14/aws-s3%e3%81%a7%e3%82%aa%e3%83%96%e3%82%b8%e3%82%a7%e3%82%af%e3%83%88%e3%82%ad%e3%83%bc%e3%81%ae%e5%91%bd%e5%90%8d%e3%81%ab%e6%b0%97%e3%82%92%e3%81%a4%e3%81%91%e3%82%8b%e8%a9%b1/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+		<item>
+		<title>XmlJavaTypeAdapterをfieldに使うとき</title>
+		<link>https://bootjp.me/2018/01/20/xmljavatypeadapter%e3%82%92field%e3%81%ab%e4%bd%bf%e3%81%86%e3%81%a8%e3%81%8d/</link>
+		<comments>https://bootjp.me/2018/01/20/xmljavatypeadapter%e3%82%92field%e3%81%ab%e4%bd%bf%e3%81%86%e3%81%a8%e3%81%8d/#respond</comments>
+		<pubDate>Sat, 20 Jan 2018 10:11:21 +0000</pubDate>
+		<dc:creator><![CDATA[bootjp]]></dc:creator>
+				<category><![CDATA[メモ]]></category>
+		<category><![CDATA[備忘録]]></category>
+
+		<guid isPermaLink="false">https://bootjp.me/?p=1201</guid>
+		<description><![CDATA[XmlJavaTypeAdapterをfieldに使うときは @XmlJavaTypeAdapter(Example… <span class="read-more"><a href="https://bootjp.me/2018/01/20/xmljavatypeadapter%e3%82%92field%e3%81%ab%e4%bd%bf%e3%81%86%e3%81%a8%e3%81%8d/">Read More &#187;</a></span>]]></description>
+		<wfw:commentRss>https://bootjp.me/2018/01/20/xmljavatypeadapter%e3%82%92field%e3%81%ab%e4%bd%bf%e3%81%86%e3%81%a8%e3%81%8d/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+		<item>
+		<title>PageSpeed Insights 100点にした</title>
+		<link>https://bootjp.me/2018/01/01/pagespeed-insights-100%e7%82%b9%e3%81%ab%e3%81%97%e3%81%9f/</link>
+		<comments>https://bootjp.me/2018/01/01/pagespeed-insights-100%e7%82%b9%e3%81%ab%e3%81%97%e3%81%9f/#respond</comments>
+		<pubDate>Mon, 01 Jan 2018 04:23:31 +0000</pubDate>
+		<dc:creator><![CDATA[bootjp]]></dc:creator>
+				<category><![CDATA[メモ]]></category>
+		<category><![CDATA[技術系]]></category>
+
+		<guid isPermaLink="false">https://bootjp.me/?p=1187</guid>
+		<description><![CDATA[なぜやったか？ 自己満足のため 結果 このブログの構成 Nginx + PHP-FPM WordPress やったこ… <span class="read-more"><a href="https://bootjp.me/2018/01/01/pagespeed-insights-100%e7%82%b9%e3%81%ab%e3%81%97%e3%81%9f/">Read More &#187;</a></span>]]></description>
+		<wfw:commentRss>https://bootjp.me/2018/01/01/pagespeed-insights-100%e7%82%b9%e3%81%ab%e3%81%97%e3%81%9f/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+		<item>
+		<title>【調査】ERR_BLOCKED_BY_XSS_AUDITOR 原因調査</title>
+		<link>https://bootjp.me/2017/05/19/%e3%80%90%e8%aa%bf%e6%9f%bb%e4%b8%ad%e3%80%91err_blocked_by_xss_auditor-%e5%8e%9f%e5%9b%a0%e8%aa%bf%e6%9f%bb/</link>
+		<comments>https://bootjp.me/2017/05/19/%e3%80%90%e8%aa%bf%e6%9f%bb%e4%b8%ad%e3%80%91err_blocked_by_xss_auditor-%e5%8e%9f%e5%9b%a0%e8%aa%bf%e6%9f%bb/#respond</comments>
+		<pubDate>Thu, 18 May 2017 23:17:07 +0000</pubDate>
+		<dc:creator><![CDATA[bootjp]]></dc:creator>
+				<category><![CDATA[メモ]]></category>
+		<category><![CDATA[技術系]]></category>
+
+		<guid isPermaLink="false">https://bootjp.me/?p=1143</guid>
+		<description><![CDATA[前提 体感的には先週くらいからTwitterを見ていると特定サイトでの特定挙動において以下のエラーが一部のブラウザに… <span class="read-more"><a href="https://bootjp.me/2017/05/19/%e3%80%90%e8%aa%bf%e6%9f%bb%e4%b8%ad%e3%80%91err_blocked_by_xss_auditor-%e5%8e%9f%e5%9b%a0%e8%aa%bf%e6%9f%bb/">Read More &#187;</a></span>]]></description>
+		<wfw:commentRss>https://bootjp.me/2017/05/19/%e3%80%90%e8%aa%bf%e6%9f%bb%e4%b8%ad%e3%80%91err_blocked_by_xss_auditor-%e5%8e%9f%e5%9b%a0%e8%aa%bf%e6%9f%bb/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+		<item>
+		<title>今日僕は年を取った。振り返りとこれからについて</title>
+		<link>https://bootjp.me/2016/11/08/%e4%bb%8a%e6%97%a5%e5%83%95%e3%81%af%e5%b9%b4%e3%82%92%e5%8f%96%e3%81%a3%e3%81%9f%e3%80%82%e6%8c%af%e3%82%8a%e8%bf%94%e3%82%8a%e3%81%a8%e3%81%93%e3%82%8c%e3%81%8b%e3%82%89/</link>
+		<comments>https://bootjp.me/2016/11/08/%e4%bb%8a%e6%97%a5%e5%83%95%e3%81%af%e5%b9%b4%e3%82%92%e5%8f%96%e3%81%a3%e3%81%9f%e3%80%82%e6%8c%af%e3%82%8a%e8%bf%94%e3%82%8a%e3%81%a8%e3%81%93%e3%82%8c%e3%81%8b%e3%82%89/#respond</comments>
+		<pubDate>Tue, 08 Nov 2016 10:33:31 +0000</pubDate>
+		<dc:creator><![CDATA[bootjp]]></dc:creator>
+				<category><![CDATA[ポエム]]></category>
+		<category><![CDATA[日記]]></category>
+		<category><![CDATA[自分語り]]></category>
+
+		<guid isPermaLink="false">https://bootjp.me/?p=1071</guid>
+		<description><![CDATA[今年も早いものでもう11月なんですね。 なんか年明けから今日まで一瞬だった気がします。 そんなこんなで年と取りました… <span class="read-more"><a href="https://bootjp.me/2016/11/08/%e4%bb%8a%e6%97%a5%e5%83%95%e3%81%af%e5%b9%b4%e3%82%92%e5%8f%96%e3%81%a3%e3%81%9f%e3%80%82%e6%8c%af%e3%82%8a%e8%bf%94%e3%82%8a%e3%81%a8%e3%81%93%e3%82%8c%e3%81%8b%e3%82%89/">Read More &#187;</a></span>]]></description>
+		<wfw:commentRss>https://bootjp.me/2016/11/08/%e4%bb%8a%e6%97%a5%e5%83%95%e3%81%af%e5%b9%b4%e3%82%92%e5%8f%96%e3%81%a3%e3%81%9f%e3%80%82%e6%8c%af%e3%82%8a%e8%bf%94%e3%82%8a%e3%81%a8%e3%81%93%e3%82%8c%e3%81%8b%e3%82%89/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+		<item>
+		<title>手書きSNSが10秒ほどTVに取り上げられたときのメモ</title>
+		<link>https://bootjp.me/2016/04/03/%e3%82%b5%e3%83%bc%e3%83%93%e3%82%b9%e3%81%8c10%e7%a7%92%e3%81%bb%e3%81%a9tv%e3%81%ab%e5%8f%96%e3%82%8a%e4%b8%8a%e3%81%92%e3%82%89%e3%82%8c%e3%81%9f%e3%81%a8%e3%81%8d%e3%81%ae%e3%83%a1%e3%83%a2/</link>
+		<comments>https://bootjp.me/2016/04/03/%e3%82%b5%e3%83%bc%e3%83%93%e3%82%b9%e3%81%8c10%e7%a7%92%e3%81%bb%e3%81%a9tv%e3%81%ab%e5%8f%96%e3%82%8a%e4%b8%8a%e3%81%92%e3%82%89%e3%82%8c%e3%81%9f%e3%81%a8%e3%81%8d%e3%81%ae%e3%83%a1%e3%83%a2/#comments</comments>
+		<pubDate>Sun, 03 Apr 2016 08:46:23 +0000</pubDate>
+		<dc:creator><![CDATA[bootjp]]></dc:creator>
+				<category><![CDATA[メモ]]></category>
+		<category><![CDATA[技術系]]></category>
+
+		<guid isPermaLink="false">https://bootjp.me/?p=1034</guid>
+		<description><![CDATA[先日、NEWS ZEROにて個人的に作っている手書きSNSが取り上げられました。 サービスがTVで放映された時間はお… <span class="read-more"><a href="https://bootjp.me/2016/04/03/%e3%82%b5%e3%83%bc%e3%83%93%e3%82%b9%e3%81%8c10%e7%a7%92%e3%81%bb%e3%81%a9tv%e3%81%ab%e5%8f%96%e3%82%8a%e4%b8%8a%e3%81%92%e3%82%89%e3%82%8c%e3%81%9f%e3%81%a8%e3%81%8d%e3%81%ae%e3%83%a1%e3%83%a2/">Read More &#187;</a></span>]]></description>
+		<wfw:commentRss>https://bootjp.me/2016/04/03/%e3%82%b5%e3%83%bc%e3%83%93%e3%82%b9%e3%81%8c10%e7%a7%92%e3%81%bb%e3%81%a9tv%e3%81%ab%e5%8f%96%e3%82%8a%e4%b8%8a%e3%81%92%e3%82%89%e3%82%8c%e3%81%9f%e3%81%a8%e3%81%8d%e3%81%ae%e3%83%a1%e3%83%a2/feed/</wfw:commentRss>
+		<slash:comments>1</slash:comments>
+		</item>
+		<item>
+		<title>SNS時代における情報の価値とはどのように決まるのか</title>
+		<link>https://bootjp.me/2016/03/06/sns%e3%81%a8%e3%81%af%e3%81%aa%e3%82%93%e3%81%aa%e3%81%ae%e3%81%8b/</link>
+		<comments>https://bootjp.me/2016/03/06/sns%e3%81%a8%e3%81%af%e3%81%aa%e3%82%93%e3%81%aa%e3%81%ae%e3%81%8b/#respond</comments>
+		<pubDate>Sun, 06 Mar 2016 03:03:24 +0000</pubDate>
+		<dc:creator><![CDATA[bootjp]]></dc:creator>
+				<category><![CDATA[ポエム]]></category>
+		<category><![CDATA[メモ]]></category>
+
+		<guid isPermaLink="false">https://bootjp.me/?p=1014</guid>
+		<description><![CDATA[SNSとはなんなのか…。 ソーシャル・ネットワーキング・サービス（英: social networking serv… <span class="read-more"><a href="https://bootjp.me/2016/03/06/sns%e3%81%a8%e3%81%af%e3%81%aa%e3%82%93%e3%81%aa%e3%81%ae%e3%81%8b/">Read More &#187;</a></span>]]></description>
+		<wfw:commentRss>https://bootjp.me/2016/03/06/sns%e3%81%a8%e3%81%af%e3%81%aa%e3%82%93%e3%81%aa%e3%81%ae%e3%81%8b/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+		<item>
+		<title>dockerでEXPOSEしているポートがglobal側からも見えてしまう問題と対策</title>
+		<link>https://bootjp.me/2016/02/21/docker%e3%81%a7expose%e3%81%97%e3%81%a6%e3%81%84%e3%82%8b%e3%83%9d%e3%83%bc%e3%83%88%e3%81%8cglobal%e5%81%b4%e3%81%8b%e3%82%89%e3%82%82%e8%a6%8b%e3%81%88%e3%81%a6%e3%81%97%e3%81%be%e3%81%86%e5%95%8f/</link>
+		<comments>https://bootjp.me/2016/02/21/docker%e3%81%a7expose%e3%81%97%e3%81%a6%e3%81%84%e3%82%8b%e3%83%9d%e3%83%bc%e3%83%88%e3%81%8cglobal%e5%81%b4%e3%81%8b%e3%82%89%e3%82%82%e8%a6%8b%e3%81%88%e3%81%a6%e3%81%97%e3%81%be%e3%81%86%e5%95%8f/#respond</comments>
+		<pubDate>Sun, 21 Feb 2016 09:33:31 +0000</pubDate>
+		<dc:creator><![CDATA[bootjp]]></dc:creator>
+				<category><![CDATA[メモ]]></category>
+		<category><![CDATA[技術系]]></category>
+		<category><![CDATA[centos]]></category>
+		<category><![CDATA[docker]]></category>
+
+		<guid isPermaLink="false">https://bootjp.me/?p=1004</guid>
+		<description><![CDATA[docker 便利ですよね、とにかくイメージつくって runさせればどこでも同じものが動かせるので。 Docker … <span class="read-more"><a href="https://bootjp.me/2016/02/21/docker%e3%81%a7expose%e3%81%97%e3%81%a6%e3%81%84%e3%82%8b%e3%83%9d%e3%83%bc%e3%83%88%e3%81%8cglobal%e5%81%b4%e3%81%8b%e3%82%89%e3%82%82%e8%a6%8b%e3%81%88%e3%81%a6%e3%81%97%e3%81%be%e3%81%86%e5%95%8f/">Read More &#187;</a></span>]]></description>
+		<wfw:commentRss>https://bootjp.me/2016/02/21/docker%e3%81%a7expose%e3%81%97%e3%81%a6%e3%81%84%e3%82%8b%e3%83%9d%e3%83%bc%e3%83%88%e3%81%8cglobal%e5%81%b4%e3%81%8b%e3%82%89%e3%82%82%e8%a6%8b%e3%81%88%e3%81%a6%e3%81%97%e3%81%be%e3%81%86%e5%95%8f/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+	</channel>
+</rss>
+
