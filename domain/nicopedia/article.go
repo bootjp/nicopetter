@@ -1,4 +1,4 @@
-package domain
+package nicopedia
 
 import (
 	"net/url"
