@@ -1,7 +1,8 @@
-languagel : go
-
+language: go
+install: true
 go:
-  - "1.x"
-  - "1.8"
-  - "1.10.x"
-  - master
+  - "1.10"
+before_install:
+  - go get -v github.com/golang/lint/golint
+
+script: go test
