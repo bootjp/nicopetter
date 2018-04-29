@@ -4,5 +4,6 @@ go:
   - "1.10"
 before_install:
   - go get -v github.com/golang/lint/golint
+  - go get -v github.com/mmcdole/gofeed
 
 script: cd test && go test
