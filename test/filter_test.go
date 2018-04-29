@@ -14,7 +14,7 @@ import (
 )
 
 func TestFilterSuccess(t *testing.T) {
-	f, _ := ioutil.ReadFile("../testdata/bootjp.me/item.xml")
+	f, _ := ioutil.ReadFile("../testdata/bootjp.me/feed.xml")
 
 	// Get actual value
 	fp := gofeed.NewParser()
