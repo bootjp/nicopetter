@@ -8,13 +8,13 @@ import (
 
 	"time"
 
-	"go_twitter_bot/item"
+	"github.com/bootjp/go_twitter_bot_for_nicopedia/item"
 
 	"github.com/mmcdole/gofeed"
 )
 
 func TestFilterSuccess(t *testing.T) {
-	f, _ := ioutil.ReadFile("../testdata/bootjp.me/item.xml")
+	f, _ := ioutil.ReadFile("../testdata/bootjp.me/feed.xml")
 
 	// Get actual value
 	fp := gofeed.NewParser()
