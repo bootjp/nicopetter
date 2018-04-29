@@ -8,7 +8,7 @@ import (
 
 	"time"
 
-	"go_twitter_bot/item"
+	"github.com/bootjp/go_twitter_bot/item"
 
 	"github.com/mmcdole/gofeed"
 )
