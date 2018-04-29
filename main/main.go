@@ -8,11 +8,11 @@ import (
 
 	"net/url"
 
-	"github.com/bootjp/go_twitter_bot/store"
+	"github.com/bootjp/go_twitter_bot_for_nicopedia/store"
 
-	"github.com/bootjp/go_twitter_bot/item"
+	"github.com/bootjp/go_twitter_bot_for_nicopedia/item"
 
-	"github.com/bootjp/go_twitter_bot/domain"
+	"github.com/bootjp/go_twitter_bot_for_nicopedia/domain"
 
 	"github.com/ChimeraCoder/anaconda"
 	"github.com/mmcdole/gofeed"

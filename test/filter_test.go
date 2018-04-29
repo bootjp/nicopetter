@@ -8,7 +8,7 @@ import (
 
 	"time"
 
-	"github.com/bootjp/go_twitter_bot/item"
+	"github.com/bootjp/go_twitter_bot_for_nicopedia/item"
 
 	"github.com/mmcdole/gofeed"
 )
