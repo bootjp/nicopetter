@@ -9,9 +9,7 @@ import (
 	"net/url"
 
 	"github.com/bootjp/go_twitter_bot_for_nicopedia/store"
-
 	"github.com/bootjp/go_twitter_bot_for_nicopedia/item"
-
 	"github.com/bootjp/go_twitter_bot_for_nicopedia/domain"
 
 	"github.com/ChimeraCoder/anaconda"
@@ -32,7 +30,7 @@ func PostTwitter(f []*gofeed.Item) (*gofeed.Item, error) {
 			return e, err
 		}
 
-		ar := domain.ParseArticleType(u)
+		ar := nicopedia.ParseArticleType(u)
 
 		_, err = api.PostTweet(e.Title+ar.PostArticleExpression+" に "+e.Description+"というお絵カキコが投稿されたよ。"+e.Link, v)
 		if err != nil {
