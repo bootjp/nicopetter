@@ -6,7 +6,7 @@ import (
 	"github.com/mmcdole/gofeed"
 )
 
-// FilterDate はfeedを受け取り，timeより新しい記事だけに限定したフィルタを書けます.
+// FilterDate time after item return.
 func FilterDate(f []*gofeed.Item, t time.Time) []*gofeed.Item {
 	var itm []*gofeed.Item
 	for i, elem := range f {
