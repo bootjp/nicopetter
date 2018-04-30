@@ -8,37 +8,35 @@ import (
 
 	"net/url"
 
-	"github.com/bootjp/go_twitter_bot_for_nicopedia/store"
-	"github.com/bootjp/go_twitter_bot_for_nicopedia/item"
-	"github.com/bootjp/go_twitter_bot_for_nicopedia/domain"
-
 	"github.com/ChimeraCoder/anaconda"
+	"github.com/bootjp/go_twitter_bot_for_nicopedia/domain/nicopedia"
+	"github.com/bootjp/go_twitter_bot_for_nicopedia/domain/nicopedia/twitter"
+	"github.com/bootjp/go_twitter_bot_for_nicopedia/item"
+	"github.com/bootjp/go_twitter_bot_for_nicopedia/store"
 	"github.com/mmcdole/gofeed"
 )
 
 // PostTwitter is Item to Twitter post.
-func PostTwitter(f []*gofeed.Item) (*gofeed.Item, error) {
+func PostTwitter(i *gofeed.Item, authorization *twitter.Authorization) error {
 	api := anaconda.NewTwitterApiWithCredentials(
-		os.Getenv("ACCESS_TOKEN"),
-		os.Getenv("ACCESS_TOKEN_SECRET"),
-		os.Getenv("CONSUMER_KEY"),
-		os.Getenv("CONSUMER_SECRET"))
+		authorization.AccessToken,
+		authorization.AccessTokenSecret,
+		authorization.ConsumerKey,
+		authorization.ConsumerSecret)
 	v := url.Values{}
-	for _, e := range f {
-		u, err := url.Parse(e.Link)
-		if err != nil {
-			return e, err
-		}
 
-		ar := nicopedia.ParseArticleType(u)
+	u, err := url.Parse(i.Link)
+	if err != nil {
+		return err
+	}
+	ar := nicopedia.ParseArticleType(u)
 
-		_, err = api.PostTweet(e.Title+ar.PostArticleExpression+" に "+e.Description+"というお絵カキコが投稿されたよ。"+e.Link, v)
-		if err != nil {
-			return e, err
-		}
+	_, err = api.PostTweet(i.Title+ar.PostArticleExpression+" に "+i.Description+"というお絵カキコが投稿されたよ。"+i.Link, v)
+	if err != nil {
+		return err
 	}
 
-	return nil, nil
+	return nil
 }
 
 func routine() error {
@@ -80,12 +78,20 @@ func routine() error {
 	sort.Slice(f, func(i, j int) bool {
 		return f[i].PublishedParsed.Before(*f[j].PublishedParsed)
 	})
+	au := &twitter.Authorization{
+		AccessToken:       os.Getenv("ACCESS_TOKEN"),
+		AccessTokenSecret: os.Getenv("ACCESS_TOKEN_SECRET"),
+		ConsumerKey:       os.Getenv("CONSUMER_KEY"),
+		ConsumerSecret:    os.Getenv("CONSUMER_SECRET"),
+	}
 
-	ef, err := PostTwitter(f)
-	if err != nil {
-		println(ef)
+	for _, v := range f {
+		err = PostTwitter(v, au)
+		if err != nil {
+			println(v)
 
-		return err
+			return err
+		}
 	}
 
 	err = r.Close()
