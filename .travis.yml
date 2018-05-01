@@ -15,3 +15,4 @@ before_install:
 script:
   - cd test && go test
   - go test -v -race $(go list ./... | grep -v "/vendor/")
+  - go vet $(go list ./... | grep -v "/vendor/")
