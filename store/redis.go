@@ -17,6 +17,7 @@ type Redis struct {
 // RedisI is a convenient interface of Redis operation for bot.
 type RedisI interface {
 	GetLastUpdateTime() (time.Time, error)
+	SetLastUpdateTime(t time.Time) error
 	Close() error
 }
 
@@ -50,4 +51,14 @@ func (c *Redis) GetLastUpdateTime() (time.Time, error) {
 // Close is Redis connection close.
 func (c *Redis) Close() error {
 	return c.c.Close()
+}
+
+// Redis set rss last update time.
+func (c *Redis) SetLastUpdateTime(t time.Time) error {
+	res := c.c.Set(c.p+"lastDate", t.Format(dateFormat), time.Duration(0))
+	if _, err := res.Result(); err != nil {
+		return err
+	}
+
+	return nil
 }
