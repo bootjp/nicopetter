@@ -8,6 +8,8 @@ import (
 
 	"net/url"
 
+	"time"
+
 	"github.com/ChimeraCoder/anaconda"
 	"github.com/bootjp/go_twitter_bot_for_nicopedia/domain/nicopedia"
 	"github.com/bootjp/go_twitter_bot_for_nicopedia/domain/nicopedia/twitter"
@@ -16,13 +18,23 @@ import (
 	"github.com/mmcdole/gofeed"
 )
 
-// PostTwitter is Item to Twitter post.
-func PostTwitter(i *gofeed.Item, authorization *twitter.Authorization) error {
+type Twitter struct {
+	twitter.Authorization
+}
+
+type SendSNS interface {
+	Twitter(i *gofeed.Item, authorization *twitter.Authorization) error
+}
+
+// Twitter is Item to Twitter post.
+func (t *Twitter) PostTwitter(i *gofeed.Item) error {
 	api := anaconda.NewTwitterApiWithCredentials(
-		authorization.AccessToken,
-		authorization.AccessTokenSecret,
-		authorization.ConsumerKey,
-		authorization.ConsumerSecret)
+		t.AccessToken,
+		t.AccessTokenSecret,
+		t.ConsumerKey,
+		t.ConsumerSecret,
+	)
+
 	v := url.Values{}
 
 	u, err := url.Parse(i.Link)
@@ -42,16 +54,6 @@ func PostTwitter(i *gofeed.Item, authorization *twitter.Authorization) error {
 func routine() error {
 
 	f, err := item.Fetch("https://dic.nicovideo.jp/feed/rss/n/oekaki")
-	if err != nil {
-		return err
-	}
-
-	// ON DEVELOP ONLY.
-	err = os.Setenv("REDIS_HOST", "localhost")
-	if err != nil {
-		return err
-	}
-	err = os.Setenv("REDIS_INDEX", "0")
 	if err != nil {
 		return err
 	}
@@ -78,20 +80,26 @@ func routine() error {
 	sort.Slice(f, func(i, j int) bool {
 		return f[i].PublishedParsed.Before(*f[j].PublishedParsed)
 	})
-	au := &twitter.Authorization{
+	au := twitter.Authorization{
 		AccessToken:       os.Getenv("ACCESS_TOKEN"),
 		AccessTokenSecret: os.Getenv("ACCESS_TOKEN_SECRET"),
 		ConsumerKey:       os.Getenv("CONSUMER_KEY"),
 		ConsumerSecret:    os.Getenv("CONSUMER_SECRET"),
 	}
 
+	sns := Twitter{au}
+
 	for _, v := range f {
-		err = PostTwitter(v, au)
+		err = sns.PostTwitter(v)
 		if err != nil {
 			println(v)
-
 			return err
 		}
+	}
+
+	err = r.SetLastUpdateTime(time.Now())
+	if err != nil {
+		return err
 	}
 
 	err = r.Close()
