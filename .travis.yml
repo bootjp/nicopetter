@@ -7,16 +7,7 @@ before_install:
   - dep ensure
   - go get -v github.com/golang/lint/golint
   - go get -v github.com/mmcdole/gofeed
-  - go get -u github.com/haya14busa/reviewdog/cmd/reviewdog
-
-before_script:
-  - echo $TRAVIS
-  - echo $TRAVIS_PULL_REQUEST
-  - echo $TRAVIS_PULL_REQUEST_BRANCH
-  - echo $TRAVIS_COMMIT
-  - echo $TRAVIS_PULL_REQUEST_SHA
-  - echo $TRAVIS_REPO_SLUG
-  - echo $TRAVIS_SECURE_ENV_VARS
+  - go get -v github.com/haya14busa/reviewdog/cmd/reviewdog
 
 script:
   - cd test && go test
