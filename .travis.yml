@@ -12,4 +12,4 @@ before_install:
 script:
   - cd test && go test
   - go test -v -race $(go list ./... | grep -v "/vendor/")
-  - golint ./... | reviewdog -efm="%f:%l:%c: %m" -diff="git diff master"
+  - 'golint | reviewdog -efm="%f:%l:%c: %m" -diff="git diff master"'
