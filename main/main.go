@@ -8,8 +8,6 @@ import (
 
 	"net/url"
 
-	"time"
-
 	"github.com/ChimeraCoder/anaconda"
 	"github.com/bootjp/go_twitter_bot_for_nicopedia/domain/nicopedia"
 	"github.com/bootjp/go_twitter_bot_for_nicopedia/domain/nicopedia/twitter"
@@ -45,6 +43,7 @@ func (t *Twitter) PostTwitter(i *gofeed.Item) error {
 
 	_, err = api.PostTweet(i.Title+ar.PostArticleExpression+" に "+i.Description+"というお絵カキコが投稿されたよ。"+i.Link, v)
 	if err != nil {
+		println(i.Title + ar.PostArticleExpression + " に " + i.Description + "というお絵カキコが投稿されたよ。" + i.Link)
 		return err
 	}
 
