@@ -1,7 +1,10 @@
 language: go
+
 install: true
+
 go:
   - "1.10"
+
 before_install:
   - go get -u github.com/golang/dep/...
   - dep ensure
@@ -12,4 +15,3 @@ before_install:
 script:
   - cd test && go test
   - go test -v -race $(go list ./... | grep -v "/vendor/")
-  - 'golint | reviewdog -efm="%f:%l:%c: %m" -diff="git diff master"'
