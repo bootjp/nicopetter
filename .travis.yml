@@ -1,9 +1,18 @@
 language: go
+
 install: true
+
 go:
   - "1.10"
+
 before_install:
+  - go get -u github.com/golang/dep/...
+  - dep ensure
   - go get -v github.com/golang/lint/golint
   - go get -v github.com/mmcdole/gofeed
+  - go get -v github.com/haya14busa/reviewdog/cmd/reviewdog
 
-script: cd test && go test
+script:
+  - cd test && go test
+  - go test -v -race $(go list ./... | grep -v "/vendor/")
+  - go vet $(go list ./... | grep -v "/vendor/")
