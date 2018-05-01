@@ -94,9 +94,9 @@ func routine() error {
 			println(v)
 			return err
 		}
+		r.SetLastUpdateTime(*v.PublishedParsed)
 	}
 
-	err = r.SetLastUpdateTime(time.Now())
 	if err != nil {
 		return err
 	}
