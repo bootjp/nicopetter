@@ -7,6 +7,7 @@ before_install:
   - dep ensure
   - go get -v github.com/golang/lint/golint
   - go get -v github.com/mmcdole/gofeed
+  - go get -u github.com/haya14busa/reviewdog/cmd/reviewdog
 
 before_script:
   - echo $TRAVIS
@@ -20,4 +21,4 @@ before_script:
 script:
   - cd test && go test
   - go test -v -race $(go list ./... | grep -v "/vendor/")
-  - go install ./cmd/reviewdog
+  - golint ./... | reviewdog -efm="%f:%l:%c: %m" -diff="git diff master"
