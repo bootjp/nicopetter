@@ -9,9 +9,9 @@ import (
 // FilterDate time after item return.
 func FilterDate(f []*gofeed.Item, t time.Time) []*gofeed.Item {
 	var itm []*gofeed.Item
-	for i, elem := range f {
-		if t.Before(*elem.PublishedParsed) {
-			itm = append(itm, f[i])
+	for _, elem := range f {
+		if elem.PublishedParsed.After(t) {
+			itm = append(itm, elem)
 		}
 	}
 
