@@ -3,7 +3,21 @@ install: true
 go:
   - "1.10"
 before_install:
+  - go get -u github.com/golang/dep/...
+  - dep ensure
   - go get -v github.com/golang/lint/golint
   - go get -v github.com/mmcdole/gofeed
 
-script: cd test && go test
+before_script:
+  - echo $TRAVIS
+  - echo $TRAVIS_PULL_REQUEST
+  - echo $TRAVIS_PULL_REQUEST_BRANCH
+  - echo $TRAVIS_COMMIT
+  - echo $TRAVIS_PULL_REQUEST_SHA
+  - echo $TRAVIS_REPO_SLUG
+  - echo $TRAVIS_SECURE_ENV_VARS
+
+script:
+  - cd test && go test
+  - go test -v -race $(go list ./... | grep -v "/vendor/")
+  - go install ./cmd/reviewdog
