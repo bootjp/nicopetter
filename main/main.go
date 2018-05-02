@@ -83,7 +83,7 @@ func routine(mode *bot.Behavior) error {
 	if err != nil {
 		return err
 	}
-	r := store.NewRedisClient(os.Getenv("REDIS_HOST"), i, "gunyapetter:")
+	r := store.NewRedisClient(os.Getenv("REDIS_HOST"), i, mode.StorePrefix)
 	defer r.Close()
 
 	t, err := r.GetLastUpdateTime()

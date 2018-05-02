@@ -11,6 +11,7 @@ type Behavior struct {
 	TweetFormat       string
 	FeedURL           string
 	EnableHTTPRequest bool
+	StorePrefix       string
 }
 
 var (
@@ -19,6 +20,7 @@ var (
 		"%s%s に %s というお絵カキコが投稿されたよ。%s",
 		"https://dic.nicovideo.jp/feed/rss/n/oekaki",
 		false,
+		"gunyapetter:",
 	}
 
 	// DulltterTmp is Nicopedia pikokakiko tweet account. https://twitter.com/dulltter_tmp
@@ -26,6 +28,7 @@ var (
 		"%s%s に %s というピコカキコが投稿されたよ。%s",
 		"https://dic.nicovideo.jp/feed/rss/n/mml",
 		false,
+		"dulltter:",
 	}
 
 	// NicopetterNewArticle is Nicopedia new general article tweet account.
@@ -33,6 +36,7 @@ var (
 		"%s の記事ができたよ。%s",
 		"https://dic.nicovideo.jp/feed/rss/n/a",
 		true,
+		"nicopetter_new:",
 	}
 
 	// NicopetterRedirectArticle is Nicopedia general article is to redirect tweet account.
@@ -40,10 +44,11 @@ var (
 		"%s から %s へのリダイレクトができたよ。 %s",
 		"https://dic.nicovideo.jp/feed/rss/u/a",
 		true,
+		"nicopetter_redirect:",
 	}
 )
 
-// TODO GODOC HERE.
+// NewBehavior is cli string from Behavior pointers.
 func NewBehavior(mode string) (*Behavior, error) {
 	switch strings.ToLower(mode) {
 	case "gunyapetter":
