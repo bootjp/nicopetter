@@ -12,6 +12,8 @@ import (
 
 	"log"
 
+	"time"
+
 	"github.com/ChimeraCoder/anaconda"
 	"github.com/bootjp/go_twitter_bot_for_nicopedia/domain/bot"
 	"github.com/bootjp/go_twitter_bot_for_nicopedia/domain/nicopedia"
@@ -110,24 +112,22 @@ func routine(mode *bot.Behavior) error {
 
 	sns := Twitter{au}
 
+	var lestPublish time.Time
 	for _, v := range f {
-		if err = sns.PostTwitter(v, mode); err != nil {
-			println(v)
+		if err = r.SetLastUpdateTime(*v.PublishedParsed); err != nil {
 			return err
 		}
 
-		if err = r.SetLastUpdateTime(*v.PublishedParsed); err != nil {
-			return nil
+		if err = sns.PostTwitter(v, mode); err != nil {
+			println(v)
+			if inErr := r.SetLastUpdateTime(lestPublish); inErr != nil {
+				return inErr
+			}
+
+			return err
 		}
-	}
 
-	if err != nil {
-		return err
-	}
-
-	err = r.Close()
-	if err != nil {
-		return err
+		lestPublish = *v.PublishedParsed
 	}
 
 	return nil
