@@ -58,9 +58,11 @@ func (t *Twitter) PostTwitter(i *gofeed.Item, mode *bot.Behavior) error {
 		out = fmt.Sprintf(mode.TweetFormat, i.Title, ar.PostArticleExpression, i.Description, i.Link)
 
 	case bot.NicopetterNewArticle:
+		out = fmt.Sprintf(mode.TweetFormat, i.Title, i.Link)
 
 	case bot.NicopetterRedirectArticle:
-
+		// TODD GET REDIRECT
+		out = fmt.Sprintf(mode.TweetFormat, i.Title, "redirect", i.Link)
 	}
 
 	if _, err = api.PostTweet(out, v); err != nil {
