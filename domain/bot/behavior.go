@@ -55,6 +55,6 @@ func NewBehavior(mode string) (*Behavior, error) {
 	case "nicopetter_redirect":
 		return NicopetterRedirectArticle, nil
 	default:
-		return nil, errors.New("invalid")
+		return nil, errors.New("mode is invalid string")
 	}
 }

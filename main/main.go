@@ -49,10 +49,22 @@ func (t *Twitter) PostTwitter(i *gofeed.Item, mode *bot.Behavior) error {
 	}
 	ar := nicopedia.ParseArticleType(u)
 
-	fmt.Printf(mode.TweetFormat)
-	_, err = api.PostTweet(i.Title+ar.PostArticleExpression+" に "+i.Description+"というお絵カキコが投稿されたよ。"+i.Link, v)
-	if err != nil {
-		println(i.Title + ar.PostArticleExpression + " に " + i.Description + "というお絵カキコが投稿されたよ。" + i.Link)
+	var out string
+	switch mode {
+	case bot.Gunyapetter:
+		out = fmt.Sprintf(mode.TweetFormat, i.Title, ar.PostArticleExpression, i.Description, i.Link)
+
+	case bot.DulltterTmp:
+		out = fmt.Sprintf(mode.TweetFormat, i.Title, ar.PostArticleExpression, i.Description, i.Link)
+
+	case bot.NicopetterNewArticle:
+
+	case bot.NicopetterRedirectArticle:
+
+	}
+
+	if _, err = api.PostTweet(out, v); err != nil {
+		println(fmt.Sprintf(mode.TweetFormat, i.Title, ar.PostArticleExpression, i.Description, i.Link))
 		return err
 	}
 
@@ -60,7 +72,6 @@ func (t *Twitter) PostTwitter(i *gofeed.Item, mode *bot.Behavior) error {
 }
 
 func routine(mode *bot.Behavior) error {
-	fmt.Printf("%v\n", mode)
 	f, err := item.Fetch("https://dic.nicovideo.jp/feed/rss/n/oekaki")
 	if err != nil {
 		return err
