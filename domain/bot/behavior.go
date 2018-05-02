@@ -8,11 +8,14 @@ type Behavior struct {
 
 var (
 	// Gunyapetter is Nicopedia oekakiko tweet account. https://twitter.com/gunyapetter
-	Gunyapetter = &Behavior{"dic.nicovideo.jp/b/a/", false}
+	Gunyapetter = &Behavior{"%s%s に %s というお絵カキコが投稿されたよ。%s", false}
 
 	// DulltterTmp is Nicopedia pikokakiko tweet account. https://twitter.com/dulltter_tmp
-	DulltterTmp = &Behavior{"dic.nicovideo.jp/b/u/", true}
+	DulltterTmp = &Behavior{"%s%s に %s というピコカキコが投稿されたよ。%s", false}
 
-	// Nicopetter is Nicopedia general article tweet account.
-	Nicopetter = &Behavior{"", true}
+	// NicopetterNewArticle is Nicopedia new general article tweet account.
+	NicopetterNewArticle = &Behavior{"%s の記事ができたよ。%s", true}
+
+	// NicopetterRedirectArticle is Nicopedia general article is to redirect tweet account.
+	NicopetterRedirectArticle = &Behavior{"%s から %s へのリダイレクトができたよ。 %s", true}
 )
