@@ -10,7 +10,7 @@ import (
 
 	"github.com/ChimeraCoder/anaconda"
 	"github.com/bootjp/go_twitter_bot_for_nicopedia/domain/nicopedia"
-	"github.com/bootjp/go_twitter_bot_for_nicopedia/domain/nicopedia/twitter"
+	"github.com/bootjp/go_twitter_bot_for_nicopedia/domain/twitter"
 	"github.com/bootjp/go_twitter_bot_for_nicopedia/item"
 	"github.com/bootjp/go_twitter_bot_for_nicopedia/store"
 	"github.com/mmcdole/gofeed"
