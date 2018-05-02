@@ -3,6 +3,8 @@ package item
 import (
 	"time"
 
+	"net/http"
+
 	"github.com/mmcdole/gofeed"
 )
 
@@ -20,8 +22,8 @@ func FilterDate(f []*gofeed.Item, t time.Time) []*gofeed.Item {
 
 // FetchFeed is got url to fetch and return rss.
 func Fetch(URL string) ([]*gofeed.Item, error) {
-	fp := gofeed.NewParser()
-	f, err := fp.ParseURL(URL)
+	p := gofeed.Parser{Client: &http.Client{Timeout: time.Duration(10 * time.Second)}}
+	f, err := p.ParseURL(URL)
 	if err != nil {
 		return nil, err
 	}
