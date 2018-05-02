@@ -83,6 +83,12 @@
   revision = "77e4a51a73ed99ee3f33c1474dc166866304acbd"
 
 [[projects]]
+  name = "github.com/pkg/errors"
+  packages = ["."]
+  revision = "645ef00459ed84a119197bfb8d8205042c6df63d"
+  version = "v0.8.0"
+
+[[projects]]
   branch = "master"
   name = "golang.org/x/net"
   packages = [
@@ -117,9 +123,15 @@
   revision = "f21a4dfb5e38f5895301dc265a8def02365cc3d0"
   version = "v0.3.0"
 
+[[projects]]
+  branch = "v2"
+  name = "gopkg.in/urfave/cli.v2"
+  packages = ["."]
+  revision = "d3ae77c26ac8db90639677e4831a728d33c36111"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "3c35ea0be53419c63a9a48c28c8089517c7749d1ac0092532aefe0a377c7784c"
+  inputs-digest = "ab6b41350b14b3c951b250782689443be1a1a2c07e0c410f89fe6c6234837dee"
   solver-name = "gps-cdcl"
   solver-version = 1
