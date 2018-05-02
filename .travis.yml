@@ -10,7 +10,7 @@ before_install:
   - dep ensure
   - go get -v github.com/golang/lint/golint
   - go get -v github.com/mmcdole/gofeed
-  - go get -v github.com/haya14busa/reviewdog/cmd/reviewdog
+#  - go get -v github.com/haya14busa/reviewdog/cmd/reviewdog
 
 script:
   - cd test && go test
