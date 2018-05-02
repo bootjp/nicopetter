@@ -74,7 +74,7 @@ func (t *Twitter) PostTwitter(i *gofeed.Item, mode *bot.Behavior) error {
 }
 
 func routine(mode *bot.Behavior) error {
-	f, err := item.Fetch("https://dic.nicovideo.jp/feed/rss/n/oekaki")
+	f, err := item.Fetch(mode.FeedURL)
 	if err != nil {
 		return err
 	}
