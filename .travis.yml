@@ -14,3 +14,7 @@ script:
   - cd test && go test
   - go test -v -race $(go list ./... | grep -v "/vendor/")
   - go vet $(go list ./... | grep -v "/vendor/")
+
+deploy:
+  on:
+    condition: $TRAVIS_GO_VERSION =~ ^1\.1\.[0-9]+$
