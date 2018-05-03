@@ -12,8 +12,6 @@ import (
 
 	"log"
 
-	"time"
-
 	"github.com/ChimeraCoder/anaconda"
 	"github.com/bootjp/go_twitter_bot_for_nicopedia/domain/bot"
 	"github.com/bootjp/go_twitter_bot_for_nicopedia/domain/nicopedia"
@@ -31,7 +29,7 @@ type Twitter struct {
 
 // SendSNS is testable interface.
 type SendSNS interface {
-	Twitter(i *gofeed.Item, authorization *twitter.Authorization) error
+	PostTwitter(i *gofeed.Item, mode *bot.Behavior) error
 }
 
 // PostTwitter is Item to Twitter post.
@@ -112,7 +110,7 @@ func routine(mode *bot.Behavior) error {
 
 	sns := Twitter{au}
 
-	var lestPublish time.Time
+	lastPublish := t
 	for _, v := range f {
 		if err = r.SetLastUpdateTime(*v.PublishedParsed); err != nil {
 			return err
@@ -120,14 +118,14 @@ func routine(mode *bot.Behavior) error {
 
 		if err = sns.PostTwitter(v, mode); err != nil {
 			println(v)
-			if inErr := r.SetLastUpdateTime(lestPublish); inErr != nil {
+			if inErr := r.SetLastUpdateTime(lastPublish); inErr != nil {
 				return inErr
 			}
 
 			return err
 		}
 
-		lestPublish = *v.PublishedParsed
+		lastPublish = *v.PublishedParsed
 	}
 
 	return nil
