@@ -3,9 +3,7 @@
 FROM alpine
 # registry.gitlab.com/bootjp/twitterbot
 
-ADD ./out /app
-
-RUN apk add --no-cache ca-certificates
+RUN apk add --no-cache ca-certificates && cd /usr/local/go/src/ && git clone git@github.com:bootjp/go_twitter_bot_for_nicopedia.git
 
 ENV GOROOT /usr/local/go
 ADD https://github.com/golang/go/raw/master/lib/time/zoneinfo.zip /usr/local/go/lib/time/zoneinfo.zip
