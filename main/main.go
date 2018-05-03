@@ -29,7 +29,7 @@ type Twitter struct {
 
 // SendSNS is testable interface.
 type SendSNS interface {
-	Twitter(i *gofeed.Item, authorization *twitter.Authorization) error
+	PostTwitter(i *gofeed.Item, mode *bot.Behavior) error
 }
 
 // PostTwitter is Item to Twitter post.
@@ -110,24 +110,22 @@ func routine(mode *bot.Behavior) error {
 
 	sns := Twitter{au}
 
+	lastPublish := t
 	for _, v := range f {
-		if err = sns.PostTwitter(v, mode); err != nil {
-			println(v)
+		if err = r.SetLastUpdateTime(*v.PublishedParsed); err != nil {
 			return err
 		}
 
-		if err = r.SetLastUpdateTime(*v.PublishedParsed); err != nil {
-			return nil
+		if err = sns.PostTwitter(v, mode); err != nil {
+			println(v)
+			if inErr := r.SetLastUpdateTime(lastPublish); inErr != nil {
+				return inErr
+			}
+
+			return err
 		}
-	}
 
-	if err != nil {
-		return err
-	}
-
-	err = r.Close()
-	if err != nil {
-		return err
+		lastPublish = *v.PublishedParsed
 	}
 
 	return nil

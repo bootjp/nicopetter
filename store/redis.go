@@ -55,7 +55,7 @@ func (c *Redis) Close() error {
 
 // Redis set rss last update time.
 func (c *Redis) SetLastUpdateTime(t time.Time) error {
-	res := c.c.Set(c.p+"lastDate", t.Format(dateFormat), time.Duration(0))
+	res := c.c.Set(c.p+"lastDate", t.Format(dateFormat), time.Duration(-1))
 	if _, err := res.Result(); err != nil {
 		return err
 	}
