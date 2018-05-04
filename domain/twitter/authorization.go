@@ -1,4 +1,4 @@
-package mytwitter
+package twitter
 
 type Authorization struct {
 	AccessToken       string
