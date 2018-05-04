@@ -155,10 +155,6 @@ func routine(mode *bot.Behavior) error {
 
 	lastPublish := t
 	for _, v := range f {
-		if err = r.SetLastUpdateTime(*v.PublishedParsed); err != nil {
-			return err
-		}
-
 		red := &nicopedia.Redirect{Exits: false}
 		switch mode {
 		case bot.NicopetterNewArticle:
@@ -179,6 +175,10 @@ func routine(mode *bot.Behavior) error {
 			if !red.Exits {
 				continue
 			}
+		}
+
+		if err = r.SetLastUpdateTime(*v.PublishedParsed); err != nil {
+			return err
 		}
 
 		err = sns.PostTwitter(v, red, mode)
