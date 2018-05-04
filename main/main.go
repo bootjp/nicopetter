@@ -73,22 +73,22 @@ func (t *Twitter) PostTwitter(i *gofeed.Item, rd *nicopedia.Redirect, mode *bot.
 		out = fmt.Sprintf(mode.TweetFormat, i.Title, rd.Title, i.Link)
 	}
 
-	println(out)
-
-	if false {
-		if _, err = api.PostTweet(out, v); err != nil {
-			println(mode.TweetFormat, i.Title, ar.PostArticleExpression, i.Description, i.Link)
-			return err
-		}
+	if _, err = api.PostTweet(out, v); err != nil {
+		println(mode.TweetFormat, i.Title, ar.PostArticleExpression, i.Description, i.Link)
+		return err
 	}
 
 	return nil
 }
 
+// FetchRedirectTitle is Nicopedia user redirect setting article redirect page title.
 func FetchRedirectTitle(u *url.URL) (*string, error) {
 	const TitleSuffix = `location.replace('http://dic.nicovideo.jp/a/`
 	c := http.Client{Timeout: time.Duration(10 * time.Second)}
 	res, err := c.Get(u.String())
+	if err != nil {
+		return nil, err
+	}
 
 	doc, err := goquery.NewDocumentFromReader(res.Body)
 	if err != nil {
@@ -115,6 +115,7 @@ func FetchRedirectTitle(u *url.URL) (*string, error) {
 	return &title, nil
 }
 
+// ErrNoRedirect not redirect article err.
 var ErrNoRedirect = errors.New("no redirect in response")
 
 func routine(mode *bot.Behavior) error {
@@ -137,7 +138,6 @@ func routine(mode *bot.Behavior) error {
 	f = item.FilterDate(f, t)
 
 	if len(f) == 0 {
-		// has not new item data
 		return nil
 	}
 
@@ -145,14 +145,8 @@ func routine(mode *bot.Behavior) error {
 	sort.Slice(f, func(i, j int) bool {
 		return f[i].PublishedParsed.Before(*f[j].PublishedParsed)
 	})
-	au := twitter.Authorization{
-		AccessToken:       os.Getenv("ACCESS_TOKEN"),
-		AccessTokenSecret: os.Getenv("ACCESS_TOKEN_SECRET"),
-		ConsumerKey:       os.Getenv("CONSUMER_KEY"),
-		ConsumerSecret:    os.Getenv("CONSUMER_SECRET"),
-	}
 
-	sns := Twitter{au}
+	sns := Twitter{createTwitterAuth()}
 
 	lastPublish := t
 	for _, v := range f {
@@ -160,31 +154,23 @@ func routine(mode *bot.Behavior) error {
 			return err
 		}
 
-		redirect := &nicopedia.Redirect{Exits: false}
+		red := &nicopedia.Redirect{Exits: false}
 		if mode.EnableRedirectTitle && mode.FollowRedirect {
-			u, err := url.Parse(v.Link)
-			if err != nil {
-				return err
-			}
-
-			title, err := FetchRedirectTitle(u)
-			if err != nil && err != ErrNoRedirect {
-				return err
-			}
-
+			red, err = extractRedirect(v)
 			if err == ErrNoRedirect {
 				continue
 			}
-
-			redirect = &nicopedia.Redirect{Exits: true, Title: *title}
+			if err != nil {
+				return err
+			}
 		}
 
-		if err = sns.PostTwitter(v, redirect, mode); err != nil {
-			println(v)
-			if inErr := r.SetLastUpdateTime(lastPublish); inErr != nil {
-				return inErr
+		err = sns.PostTwitter(v, red, mode)
+		if err != nil {
+			log.Fatal(err)
+			if err = r.SetLastUpdateTime(lastPublish); err != nil {
+				return err
 			}
-
 			return err
 		}
 
@@ -192,6 +178,33 @@ func routine(mode *bot.Behavior) error {
 	}
 
 	return nil
+}
+
+func createTwitterAuth() twitter.Authorization {
+	return twitter.Authorization{
+		AccessToken:       os.Getenv("ACCESS_TOKEN"),
+		AccessTokenSecret: os.Getenv("ACCESS_TOKEN_SECRET"),
+		ConsumerKey:       os.Getenv("CONSUMER_KEY"),
+		ConsumerSecret:    os.Getenv("CONSUMER_SECRET"),
+	}
+}
+
+func extractRedirect(f *gofeed.Item) (*nicopedia.Redirect, error) {
+	u, err := url.Parse(f.Link)
+	if err != nil {
+		return nil, err
+	}
+
+	title, err := FetchRedirectTitle(u)
+	if err != nil && err != ErrNoRedirect {
+		return nil, err
+	}
+
+	if err == ErrNoRedirect {
+		return nil, err
+	}
+
+	return &nicopedia.Redirect{Exits: true, Title: *title}, nil
 }
 
 func main() {
