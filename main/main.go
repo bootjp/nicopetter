@@ -76,7 +76,7 @@ func (t *Twitter) PostTwitter(i *gofeed.Item, rd *nicopedia.Redirect, mode *bot.
 	}
 
 	if _, err = api.PostTweet(out, v); err != nil {
-		println(mode.TweetFormat, i.Title, ar.PostArticleExpression, i.Description, i.Link)
+		println(out)
 		return err
 	}
 
