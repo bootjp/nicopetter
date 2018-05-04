@@ -19,8 +19,8 @@ import (
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/bootjp/go_twitter_bot_for_nicopedia/domain/bot"
-	"github.com/bootjp/go_twitter_bot_for_nicopedia/domain/mytwitter"
 	"github.com/bootjp/go_twitter_bot_for_nicopedia/domain/nicopedia"
+	mytwitter "github.com/bootjp/go_twitter_bot_for_nicopedia/domain/twitter"
 	"github.com/bootjp/go_twitter_bot_for_nicopedia/item"
 	"github.com/bootjp/go_twitter_bot_for_nicopedia/store"
 	"github.com/dghubble/go-twitter/twitter"
