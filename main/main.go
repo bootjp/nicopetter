@@ -47,6 +47,8 @@ func (t *Twitter) PostTwitter(i *gofeed.Item, rd *nicopedia.Redirect, mode *bot.
 		t.ConsumerKey,
 		t.ConsumerSecret,
 	)
+	api.SetDelay(0 * time.Second)
+	defer api.Close()
 
 	v := url.Values{}
 
