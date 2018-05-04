@@ -12,13 +12,20 @@ import (
 
 	"log"
 
+	"net/http"
+	"time"
+
+	"strings"
+
 	"github.com/ChimeraCoder/anaconda"
+	"github.com/PuerkitoBio/goquery"
 	"github.com/bootjp/go_twitter_bot_for_nicopedia/domain/bot"
 	"github.com/bootjp/go_twitter_bot_for_nicopedia/domain/nicopedia"
 	"github.com/bootjp/go_twitter_bot_for_nicopedia/domain/twitter"
 	"github.com/bootjp/go_twitter_bot_for_nicopedia/item"
 	"github.com/bootjp/go_twitter_bot_for_nicopedia/store"
 	"github.com/mmcdole/gofeed"
+	"github.com/pkg/errors"
 	"gopkg.in/urfave/cli.v2"
 )
 
@@ -29,11 +36,11 @@ type Twitter struct {
 
 // SendSNS is testable interface.
 type SendSNS interface {
-	PostTwitter(i *gofeed.Item, mode *bot.Behavior) error
+	PostTwitter(i *gofeed.Item, rd *nicopedia.Redirect, mode *bot.Behavior) error
 }
 
 // PostTwitter is Item to Twitter post.
-func (t *Twitter) PostTwitter(i *gofeed.Item, mode *bot.Behavior) error {
+func (t *Twitter) PostTwitter(i *gofeed.Item, rd *nicopedia.Redirect, mode *bot.Behavior) error {
 	api := anaconda.NewTwitterApiWithCredentials(
 		t.AccessToken,
 		t.AccessTokenSecret,
@@ -60,18 +67,55 @@ func (t *Twitter) PostTwitter(i *gofeed.Item, mode *bot.Behavior) error {
 	case bot.NicopetterNewArticle:
 		out = fmt.Sprintf(mode.TweetFormat, i.Title, i.Link)
 
-	case bot.NicopetterRedirectArticle:
-		// TODD GET REDIRECT
-		out = fmt.Sprintf(mode.TweetFormat, i.Title, "redirect", i.Link)
+	case bot.NicopetterNewRedirectArticle:
+		out = fmt.Sprintf(mode.TweetFormat, i.Title, rd.Title, i.Link)
+	case bot.NicopetterModifyRedirectArticle:
+		out = fmt.Sprintf(mode.TweetFormat, i.Title, rd.Title, i.Link)
 	}
 
-	if _, err = api.PostTweet(out, v); err != nil {
-		println(fmt.Sprintf(mode.TweetFormat, i.Title, ar.PostArticleExpression, i.Description, i.Link))
-		return err
+	println(out)
+
+	if false {
+		if _, err = api.PostTweet(out, v); err != nil {
+			println(mode.TweetFormat, i.Title, ar.PostArticleExpression, i.Description, i.Link)
+			return err
+		}
 	}
 
 	return nil
 }
+
+func FetchRedirectTitle(u *url.URL) (*string, error) {
+	const TitleSuffix = `location.replace('http://dic.nicovideo.jp/a/`
+	c := http.Client{Timeout: time.Duration(10 * time.Second)}
+	res, err := c.Get(u.String())
+
+	doc, err := goquery.NewDocumentFromReader(res.Body)
+	if err != nil {
+		return nil, err
+	}
+	var head string
+	doc.Find("head").Each(func(i int, s *goquery.Selection) {
+		head = s.Text()
+	})
+	f := strings.Index(head, TitleSuffix)
+	if f == -1 {
+		return nil, ErrNoRedirect
+	}
+
+	head = head[f+len(TitleSuffix):]
+	i := strings.Index(head, `'`)
+	head = head[:i]
+
+	title, err := url.QueryUnescape(head)
+	if err != nil {
+		return nil, err
+	}
+
+	return &title, nil
+}
+
+var ErrNoRedirect = errors.New("no redirect in response")
 
 func routine(mode *bot.Behavior) error {
 	f, err := item.Fetch(mode.FeedURL)
@@ -116,7 +160,26 @@ func routine(mode *bot.Behavior) error {
 			return err
 		}
 
-		if err = sns.PostTwitter(v, mode); err != nil {
+		redirect := &nicopedia.Redirect{Exits: false}
+		if mode.EnableRedirectTitle && mode.FollowRedirect {
+			u, err := url.Parse(v.Link)
+			if err != nil {
+				return err
+			}
+
+			title, err := FetchRedirectTitle(u)
+			if err != nil && err != ErrNoRedirect {
+				return err
+			}
+
+			if err == ErrNoRedirect {
+				continue
+			}
+
+			redirect = &nicopedia.Redirect{Exits: true, Title: *title}
+		}
+
+		if err = sns.PostTwitter(v, redirect, mode); err != nil {
 			println(v)
 			if inErr := r.SetLastUpdateTime(lastPublish); inErr != nil {
 				return inErr

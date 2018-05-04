@@ -8,10 +8,11 @@ import (
 
 // Behavior is bot business logic behavior switch types.
 type Behavior struct {
-	TweetFormat       string
-	FeedURL           string
-	EnableHTTPRequest bool
-	StorePrefix       string
+	TweetFormat         string
+	FeedURL             string
+	EnableRedirectTitle bool
+	FollowRedirect      bool
+	StorePrefix         string
 }
 
 var (
@@ -19,6 +20,7 @@ var (
 	Gunyapetter = &Behavior{
 		"%s%s に %s というお絵カキコが投稿されたよ。%s",
 		"https://dic.nicovideo.jp/feed/rss/n/oekaki",
+		false,
 		false,
 		"gunyapetter:",
 	}
@@ -28,6 +30,7 @@ var (
 		"%s%s に %s というピコカキコが投稿されたよ。%s",
 		"https://dic.nicovideo.jp/feed/rss/n/mml",
 		false,
+		false,
 		"dulltter:",
 	}
 
@@ -36,15 +39,24 @@ var (
 		"%s の記事ができたよ。%s",
 		"https://dic.nicovideo.jp/feed/rss/n/a",
 		true,
+		false,
 		"nicopetter_new:",
 	}
 
 	// NicopetterRedirectArticle is Nicopedia general article is to redirect tweet account.
-	NicopetterRedirectArticle = &Behavior{
+	NicopetterNewRedirectArticle = &Behavior{
+		"%s から %s へのリダイレクトができたよ。 %s",
+		"https://dic.nicovideo.jp/feed/rss/n/a",
+		true,
+		true,
+		"nicopetter_new_redirect:",
+	}
+	NicopetterModifyRedirectArticle = &Behavior{
 		"%s から %s へのリダイレクトができたよ。 %s",
 		"https://dic.nicovideo.jp/feed/rss/u/a",
 		true,
-		"nicopetter_redirect:",
+		true,
+		"nicopetter_modify_redirect:",
 	}
 )
 
@@ -57,8 +69,10 @@ func NewBehavior(mode string) (*Behavior, error) {
 		return DulltterTmp, nil
 	case "nicopetter_new":
 		return NicopetterNewArticle, nil
-	case "nicopetter_redirect":
-		return NicopetterRedirectArticle, nil
+	case "nicopetter_new_redirect":
+		return NicopetterNewRedirectArticle, nil
+	case "nicopetter_modify_redirect":
+		return NicopetterModifyRedirectArticle, nil
 	default:
 		return nil, errors.New("mode is invalid string")
 	}
