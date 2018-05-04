@@ -44,3 +44,7 @@
 [[constraint]]
   branch = "v2"
   name = "gopkg.in/urfave/cli.v2"
+
+[[constraint]]
+  name = "github.com/PuerkitoBio/goquery"
+  version = "1.4.0"
