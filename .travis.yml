@@ -17,4 +17,4 @@ script:
 
 deploy:
   on:
-    condition: $TRAVIS_GO_VERSION =~ ^1\.1\.[0-9]+$
+    condition: $TRAVIS_GO_VERSION =~ ^1\.10\.[0-9]+$
