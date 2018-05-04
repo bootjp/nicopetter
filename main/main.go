@@ -98,6 +98,11 @@ func FetchRedirectTitle(u *url.URL) (*string, error) {
 	doc.Find("head").Each(func(i int, s *goquery.Selection) {
 		head = s.Text()
 	})
+
+	redirect := strings.Contains(head, `location.replace`)
+	if !redirect {
+		return nil, ErrNoRedirect
+	}
 	f := strings.Index(head, TitleSuffix)
 	if f == -1 {
 		return nil, ErrNoRedirect
@@ -155,13 +160,24 @@ func routine(mode *bot.Behavior) error {
 		}
 
 		red := &nicopedia.Redirect{Exits: false}
-		if mode.EnableRedirectTitle && mode.FollowRedirect {
+		switch mode {
+		case bot.NicopetterNewArticle:
 			red, err = extractRedirect(v)
-			if err == ErrNoRedirect {
-				continue
-			}
 			if err != nil {
 				return err
+			}
+			// 新着モードでリダイレクトしているものは無視する
+			if red.Exits {
+				continue
+			}
+		case bot.NicopetterModifyRedirectArticle, bot.NicopetterNewRedirectArticle:
+			red, err = extractRedirect(v)
+			if err != nil {
+				return err
+			}
+			// リダイレクトモードでリダイレクト先が見つからないものは無視する
+			if !red.Exits {
+				continue
 			}
 		}
 
@@ -196,11 +212,10 @@ func extractRedirect(f *gofeed.Item) (*nicopedia.Redirect, error) {
 	}
 
 	title, err := FetchRedirectTitle(u)
-	if err != nil && err != ErrNoRedirect {
-		return nil, err
-	}
-
-	if err == ErrNoRedirect {
+	if err != nil {
+		if err.Error() == "no redirect in response" {
+			return &nicopedia.Redirect{Exits: false}, nil
+		}
 		return nil, err
 	}
 
