@@ -17,13 +17,14 @@ import (
 
 	"strings"
 
-	"github.com/ChimeraCoder/anaconda"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/bootjp/go_twitter_bot_for_nicopedia/domain/bot"
+	"github.com/bootjp/go_twitter_bot_for_nicopedia/domain/mytwitter"
 	"github.com/bootjp/go_twitter_bot_for_nicopedia/domain/nicopedia"
-	"github.com/bootjp/go_twitter_bot_for_nicopedia/domain/twitter"
 	"github.com/bootjp/go_twitter_bot_for_nicopedia/item"
 	"github.com/bootjp/go_twitter_bot_for_nicopedia/store"
+	"github.com/dghubble/go-twitter/twitter"
+	"github.com/dghubble/oauth1"
 	"github.com/mmcdole/gofeed"
 	"github.com/pkg/errors"
 	"gopkg.in/urfave/cli.v2"
@@ -31,7 +32,7 @@ import (
 
 // Twitter base struct.
 type Twitter struct {
-	twitter.Authorization
+	mytwitter.Authorization
 }
 
 // SendSNS is testable interface.
@@ -41,16 +42,11 @@ type SendSNS interface {
 
 // PostTwitter is Item to Twitter post.
 func (t *Twitter) PostTwitter(i *gofeed.Item, rd *nicopedia.Redirect, mode *bot.Behavior) error {
-	api := anaconda.NewTwitterApiWithCredentials(
-		t.AccessToken,
-		t.AccessTokenSecret,
-		t.ConsumerKey,
-		t.ConsumerSecret,
-	)
-	api.SetDelay(0 * time.Second)
-	defer api.Close()
-
-	v := url.Values{}
+	config := oauth1.NewConfig(t.Authorization.ConsumerKey, t.Authorization.ConsumerSecret)
+	token := oauth1.NewToken(t.Authorization.AccessToken, t.Authorization.AccessTokenSecret)
+	httpClient := config.Client(oauth1.NoContext, token)
+	httpClient.Timeout = time.Duration(10 * time.Second)
+	client := twitter.NewClient(httpClient)
 
 	u, err := url.Parse(i.Link)
 	if err != nil {
@@ -75,8 +71,11 @@ func (t *Twitter) PostTwitter(i *gofeed.Item, rd *nicopedia.Redirect, mode *bot.
 		out = fmt.Sprintf(mode.TweetFormat, i.Title, rd.Title, i.Link)
 	}
 
-	if _, err = api.PostTweet(out, v); err != nil {
-		println(out)
+	tweet, resp, err := client.Statuses.Update(out, nil)
+
+	if err != nil {
+		println(tweet)
+		println(resp)
 		return err
 	}
 
@@ -198,8 +197,8 @@ func routine(mode *bot.Behavior) error {
 	return nil
 }
 
-func createTwitterAuth() twitter.Authorization {
-	return twitter.Authorization{
+func createTwitterAuth() mytwitter.Authorization {
+	return mytwitter.Authorization{
 		AccessToken:       os.Getenv("ACCESS_TOKEN"),
 		AccessTokenSecret: os.Getenv("ACCESS_TOKEN_SECRET"),
 		ConsumerKey:       os.Getenv("CONSUMER_KEY"),

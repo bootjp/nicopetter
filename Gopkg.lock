@@ -32,6 +32,30 @@
   revision = "53511d3c733003985b0b76f733df1f4d0095ee6a"
 
 [[projects]]
+  name = "github.com/cenkalti/backoff"
+  packages = ["."]
+  revision = "2ea60e5f094469f9e65adb9cd103795b73ae743e"
+  version = "v2.0.0"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/dghubble/go-twitter"
+  packages = ["twitter"]
+  revision = "c4115fa44a928413e0b857e0eb47376ffde3a61a"
+
+[[projects]]
+  name = "github.com/dghubble/oauth1"
+  packages = ["."]
+  revision = "70562a5920ad9b6ff03ef697c0f90ae569abbd2b"
+  version = "v0.4.0"
+
+[[projects]]
+  name = "github.com/dghubble/sling"
+  packages = ["."]
+  revision = "eb56e89ac5088bebb12eef3cb4b293300f43608b"
+  version = "v1.1.0"
+
+[[projects]]
   branch = "master"
   name = "github.com/dustin/go-jsonpointer"
   packages = ["."]
@@ -63,6 +87,12 @@
   ]
   revision = "877867d2845fbaf86798befe410b6ceb6f5c29a3"
   version = "v6.10.2"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/google/go-querystring"
+  packages = ["query"]
+  revision = "53e6ce116135b80d037921a7fdd5138cf32d7a8a"
 
 [[projects]]
   name = "github.com/mmcdole/gofeed"
@@ -132,6 +162,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "a15d7f3c1227394e8accb9a0015934a3c2ada18450e00b8fc8134b7f30837f17"
+  inputs-digest = "fffaeec7dd68ef4d60d615e959d999ee052a5417d303dde720ebe83fa73bb7e6"
   solver-name = "gps-cdcl"
   solver-version = 1
