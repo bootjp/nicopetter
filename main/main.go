@@ -45,7 +45,7 @@ func (t *Twitter) PostTwitter(i *gofeed.Item, rd *nicopedia.Redirect, mode *bot.
 	config := oauth1.NewConfig(t.Authorization.ConsumerKey, t.Authorization.ConsumerSecret)
 	token := oauth1.NewToken(t.Authorization.AccessToken, t.Authorization.AccessTokenSecret)
 	httpClient := config.Client(oauth1.NoContext, token)
-	httpClient.Timeout = time.Duration(10 * time.Second)
+	httpClient.Timeout = time.Duration(10) * time.Second
 	client := twitter.NewClient(httpClient)
 
 	u, err := url.Parse(i.Link)
@@ -87,7 +87,7 @@ func (t *Twitter) PostTwitter(i *gofeed.Item, rd *nicopedia.Redirect, mode *bot.
 // FetchRedirectTitle is Nicopedia user redirect setting article redirect page title.
 func FetchRedirectTitle(u *url.URL) (*string, error) {
 	const TitleSuffix = `location.replace('http://dic.nicovideo.jp/a/`
-	c := http.Client{Timeout: time.Duration(10 * time.Second)}
+	c := http.Client{Timeout: time.Duration(10) * time.Second}
 	res, err := c.Get(u.String())
 	if err != nil {
 		return nil, err

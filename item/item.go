@@ -41,7 +41,7 @@ func FilterMarkedAsPost(f []*gofeed.Item, r *store.Redis) ([]*gofeed.Item, error
 
 // Fetch is got url to fetch and return rss.
 func Fetch(URL string) ([]*gofeed.Item, error) {
-	p := gofeed.Parser{Client: &http.Client{Timeout: time.Duration(10 * time.Second)}}
+	p := gofeed.Parser{Client: &http.Client{Timeout: time.Duration(10) * time.Second}}
 	f, err := p.ParseURL(URL)
 	if err != nil {
 		log.Println(URL)
