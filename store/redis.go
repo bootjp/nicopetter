@@ -21,6 +21,8 @@ type RedisI interface {
 	GetLastUpdateTime() (time.Time, error)
 	SetLastUpdateTime(t time.Time) error
 	Close() error
+	URLPosted(u string) (bool, error)
+	MarkedAsPosted(u string) error
 }
 
 // NewRedisClient is a new store connect instance  operation for bot.
