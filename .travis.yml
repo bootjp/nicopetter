@@ -13,7 +13,7 @@ before_install:
   - gometalinter --install
 
 script:
-  - gometalinter ./...
+  - gometalinter ./... --vendor
   - cd test && go test
   - go test -v -race $(go list ./... | grep -v "/vendor/")
   - go vet $(go list ./... | grep -v "/vendor/")
