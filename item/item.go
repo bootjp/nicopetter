@@ -5,6 +5,8 @@ import (
 
 	"net/http"
 
+	"log"
+
 	"github.com/bootjp/go_twitter_bot_for_nicopedia/store"
 	"github.com/mmcdole/gofeed"
 )
@@ -42,6 +44,7 @@ func Fetch(URL string) ([]*gofeed.Item, error) {
 	p := gofeed.Parser{Client: &http.Client{Timeout: time.Duration(10 * time.Second)}}
 	f, err := p.ParseURL(URL)
 	if err != nil {
+		log.Println(URL)
 		return nil, err
 	}
 
