@@ -55,7 +55,7 @@ func (c *Redis) Close() error {
 	return c.c.Close()
 }
 
-// Redis set rss last update time.
+// SetLastUpdateTime set rss last update time.
 func (c *Redis) SetLastUpdateTime(t time.Time) error {
 	res := c.c.Set(c.p+"lastDate", t.Format(dateFormat), time.Duration(-1))
 	if _, err := res.Result(); err != nil {
@@ -65,6 +65,7 @@ func (c *Redis) SetLastUpdateTime(t time.Time) error {
 	return nil
 }
 
+// URLPosted is check url tweeted.
 func (c *Redis) URLPosted(u string) (bool, error) {
 	res, err := c.c.Exists(c.p + u).Result()
 	if err != nil {
@@ -74,6 +75,7 @@ func (c *Redis) URLPosted(u string) (bool, error) {
 	return res == 1, nil
 }
 
+// MarkedAsPosted is url is tweeted mark.
 func (c *Redis) MarkedAsPosted(u string) error {
 	res, err := c.c.Set(c.p+u, "", time.Duration(24*time.Hour*7)).Result()
 	if err != nil {
