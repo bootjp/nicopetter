@@ -9,7 +9,7 @@ before_install:
   - go get -u github.com/golang/dep/...
   - dep ensure
   - go get -v github.com/golang/lint/golint
-  - gometalinter.v1 --install
+  - gometalinter --install
 
 script:
   - gometalinter.v1 --disable-all --enable=vet --enable=vetshadow --enable=golint --enable=structcheck --enable=aligncheck --enable=deadcode --enable=ineffassign --vendor --enable=goimports --enable=varcheck --enable=interfacer --enable=goconst --enable=gosimple --enable=staticcheck --enable=unused --enable=misspell --deadline=300s ./...
