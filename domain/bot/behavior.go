@@ -56,7 +56,7 @@ var (
 		"https://dic.nicovideo.jp/feed/rss/u/a",
 		true,
 		true,
-		"nicopetter_modify_redirect:",
+		"nicopetter_new_redirect:",
 	}
 )
 
