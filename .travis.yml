@@ -13,7 +13,7 @@ before_install:
   - gometalinter --install
 
 script:
-  - gometalinter.v1 --disable-all --enable=vet --enable=vetshadow --enable=golint --enable=structcheck --enable=aligncheck --enable=deadcode --enable=ineffassign --vendor --enable=goimports --enable=varcheck --enable=interfacer --enable=goconst --enable=gosimple --enable=staticcheck --enable=unused --enable=misspell --deadline=300s ./...
+  - gometalinter ./...
   - cd test && go test
   - go test -v -race $(go list ./... | grep -v "/vendor/")
   - go vet $(go list ./... | grep -v "/vendor/")
