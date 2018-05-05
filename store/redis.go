@@ -3,6 +3,8 @@ package store
 import (
 	"time"
 
+	"errors"
+
 	"github.com/go-redis/redis"
 )
 
@@ -61,4 +63,26 @@ func (c *Redis) SetLastUpdateTime(t time.Time) error {
 	}
 
 	return nil
+}
+
+func (c *Redis) URLPosted(u string) (bool, error) {
+	res, err := c.c.Exists(c.p + u).Result()
+	if err != nil {
+		return false, err
+	}
+
+	return res == 1, nil
+}
+
+func (c *Redis) MarkedAsPosted(u string) error {
+	res, err := c.c.Set(c.p+u, "", time.Duration(24*time.Hour*7)).Result()
+	if err != nil {
+		return err
+	}
+
+	if res == "OK" {
+		return nil
+	}
+
+	return errors.New("redis set error MarkedAsPosted")
 }

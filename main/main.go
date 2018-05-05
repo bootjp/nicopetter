@@ -74,8 +74,10 @@ func (t *Twitter) PostTwitter(i *gofeed.Item, rd *nicopedia.Redirect, mode *bot.
 	tweet, resp, err := client.Statuses.Update(out, nil)
 
 	if err != nil {
-		println(tweet)
-		println(resp)
+
+		fmt.Printf("%v\n", tweet)
+		fmt.Printf("%v\n", resp)
+		println(out)
 		return err
 	}
 
@@ -141,7 +143,16 @@ func routine(mode *bot.Behavior) error {
 	if err != nil {
 		return err
 	}
-	f = item.FilterDate(f, t)
+
+	switch mode {
+	case bot.Gunyapetter, bot.DulltterTmp:
+		f = item.FilterDate(f, t)
+	case bot.NicopetterModifyRedirectArticle, bot.NicopetterNewArticle, bot.NicopetterNewRedirectArticle:
+		f, err = item.FilterMarkedAsPost(f, r)
+		if err != nil {
+			return err
+		}
+	}
 
 	if len(f) == 0 {
 		return nil
@@ -178,8 +189,18 @@ func routine(mode *bot.Behavior) error {
 			}
 		}
 
-		if err = r.SetLastUpdateTime(*v.PublishedParsed); err != nil {
-			return err
+		switch mode {
+		case bot.Gunyapetter, bot.DulltterTmp:
+			if err = r.SetLastUpdateTime(*v.PublishedParsed); err != nil {
+				return err
+			}
+		case bot.NicopetterNewRedirectArticle, bot.NicopetterNewArticle, bot.NicopetterModifyRedirectArticle:
+			if err = r.MarkedAsPosted(v.Link); err != nil {
+				return err
+			}
+		}
+		if err != nil {
+			return nil
 		}
 
 		err = sns.PostTwitter(v, red, mode)
