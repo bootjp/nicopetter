@@ -204,6 +204,18 @@ func routine(mode *bot.Behavior) error {
 		}
 
 		err = sns.PostTwitter(v, red, mode)
+
+		if mode == bot.NicopetterNewRedirectArticle || mode == bot.NicopetterNewArticle || mode == bot.NicopetterModifyRedirectArticle {
+
+			switch {
+			// RSSがソートされていない関係上，すべてのRSSを見るようにする配慮
+			case err != nil && err.Error() == "twitter: 187 Status is a duplicate.":
+				log.Print(err)
+				continue
+			case err != nil:
+				return err
+			}
+		}
 		if err != nil {
 			log.Fatal(err)
 			if err = r.SetLastUpdateTime(lastPublish); err != nil {
