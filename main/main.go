@@ -200,7 +200,7 @@ func routine(mode *bot.Behavior) error {
 			}
 		}
 		if err != nil {
-			return nil
+			return err
 		}
 
 		err = sns.PostTwitter(v, red, mode)
