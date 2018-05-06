@@ -8,11 +8,12 @@ import (
 
 // Behavior is bot business logic behavior switch types.
 type Behavior struct {
-	TweetFormat         string
-	FeedURL             string
-	EnableRedirectTitle bool
-	FollowRedirect      bool
-	StorePrefix         string
+	TweetFormat     string
+	FeedURL         string
+	CheckRedirect   bool
+	FollowRedirect  bool
+	IgnoreDuplicate bool
+	StorePrefix     string
 }
 
 var (
@@ -20,6 +21,7 @@ var (
 	Gunyapetter = &Behavior{
 		"%s%s に %s というお絵カキコが投稿されたよ。%s",
 		"https://dic.nicovideo.jp/feed/rss/n/oekaki",
+		false,
 		false,
 		false,
 		"gunyapetter:",
@@ -31,6 +33,7 @@ var (
 		"https://dic.nicovideo.jp/feed/rss/n/mml",
 		false,
 		false,
+		false,
 		"dulltter:",
 	}
 
@@ -40,6 +43,7 @@ var (
 		"https://dic.nicovideo.jp/feed/rss/n/a",
 		true,
 		false,
+		true,
 		"nicopetter_new:",
 	}
 
@@ -49,12 +53,14 @@ var (
 		"https://dic.nicovideo.jp/feed/rss/n/a",
 		true,
 		true,
+		true,
 		"nicopetter_new_redirect:",
 	}
 	// NicopetterModifyRedirectArticle is Nicopedia exists article is modify the redirect.
 	NicopetterModifyRedirectArticle = &Behavior{
 		"%s から %s へのリダイレクトができたよ。 %s",
 		"https://dic.nicovideo.jp/feed/rss/u/a",
+		true,
 		true,
 		true,
 		"nicopetter_new_redirect:",

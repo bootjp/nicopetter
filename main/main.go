@@ -30,18 +30,13 @@ import (
 	"gopkg.in/urfave/cli.v2"
 )
 
-// Twitter base struct.
-type Twitter struct {
+// SNS base struct.
+type SNS struct {
 	mytwitter.Authorization
 }
 
-// SendSNS is testable interface.
-type SendSNS interface {
-	PostTwitter(i *gofeed.Item, rd *nicopedia.Redirect, mode *bot.Behavior) error
-}
-
-// PostTwitter is Item to Twitter post.
-func (t *Twitter) PostTwitter(i *gofeed.Item, rd *nicopedia.Redirect, mode *bot.Behavior) error {
+// Twitter is Item to SNS post.
+func (t *SNS) Twitter(i *gofeed.Item, rd *nicopedia.Redirect, mode *bot.Behavior) error {
 	config := oauth1.NewConfig(t.Authorization.ConsumerKey, t.Authorization.ConsumerSecret)
 	token := oauth1.NewToken(t.Authorization.AccessToken, t.Authorization.AccessTokenSecret)
 	httpClient := config.Client(oauth1.NoContext, token)
@@ -58,13 +53,10 @@ func (t *Twitter) PostTwitter(i *gofeed.Item, rd *nicopedia.Redirect, mode *bot.
 	switch mode {
 	case bot.Gunyapetter:
 		out = fmt.Sprintf(mode.TweetFormat, i.Title, ar.PostArticleExpression, i.Description, i.Link)
-
 	case bot.DulltterTmp:
 		out = fmt.Sprintf(mode.TweetFormat, i.Title, ar.PostArticleExpression, i.Description, i.Link)
-
 	case bot.NicopetterNewArticle:
 		out = fmt.Sprintf(mode.TweetFormat, i.Title, i.Link)
-
 	case bot.NicopetterNewRedirectArticle:
 		out = fmt.Sprintf(mode.TweetFormat, i.Title, rd.Title, i.Link)
 	case bot.NicopetterModifyRedirectArticle:
@@ -85,17 +77,18 @@ func (t *Twitter) PostTwitter(i *gofeed.Item, rd *nicopedia.Redirect, mode *bot.
 }
 
 // FetchRedirectTitle is Nicopedia user redirect setting article redirect page title.
-func FetchRedirectTitle(u *url.URL) (*string, error) {
+func FetchRedirectTitle(u *url.URL) (string, error) {
+
 	const TitleSuffix = `location.replace('http://dic.nicovideo.jp/a/`
 	c := http.Client{Timeout: time.Duration(10) * time.Second}
 	res, err := c.Get(u.String())
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
 	doc, err := goquery.NewDocumentFromReader(res.Body)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 	var head string
 	doc.Find("head").Each(func(i int, s *goquery.Selection) {
@@ -104,11 +97,11 @@ func FetchRedirectTitle(u *url.URL) (*string, error) {
 
 	redirect := strings.Contains(head, `location.replace`)
 	if !redirect {
-		return nil, ErrNoRedirect
+		return "", ErrNoRedirect
 	}
 	f := strings.Index(head, TitleSuffix)
 	if f == -1 {
-		return nil, ErrNoRedirect
+		return "", ErrNoRedirect
 	}
 
 	head = head[f+len(TitleSuffix):]
@@ -117,10 +110,10 @@ func FetchRedirectTitle(u *url.URL) (*string, error) {
 
 	title, err := url.QueryUnescape(head)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
-	return &title, nil
+	return title, nil
 }
 
 // ErrNoRedirect not redirect article err.
@@ -137,7 +130,13 @@ func routine(mode *bot.Behavior) error {
 		return err
 	}
 	r := store.NewRedisClient(os.Getenv("REDIS_HOST"), i, mode.StorePrefix)
-	defer r.Close()
+	defer func() {
+		cerr := r.Close()
+		if cerr == nil {
+			return
+		}
+		err = fmt.Errorf("failed to close: %v, the original error was %v", cerr, err)
+	}()
 
 	t, err := r.GetLastUpdateTime()
 	if err != nil {
@@ -163,71 +162,38 @@ func routine(mode *bot.Behavior) error {
 		return f[i].PublishedParsed.Before(*f[j].PublishedParsed)
 	})
 
-	sns := Twitter{createTwitterAuth()}
+	sns := SNS{createTwitterAuth()}
 
 	lastPublish := t
+
 	for _, v := range f {
-		red := &nicopedia.Redirect{Exits: false}
-		switch mode {
-		case bot.NicopetterNewArticle:
-			red, err = extractRedirect(v)
-			if err != nil {
-				return err
-			}
-			// 新着モードでリダイレクトしているものは無視する
-			if red.Exits {
-				continue
-			}
-		case bot.NicopetterModifyRedirectArticle, bot.NicopetterNewRedirectArticle:
-			red, err = extractRedirect(v)
-			if err != nil {
-				return err
-			}
-			// リダイレクトモードでリダイレクト先が見つからないものは無視する
-			if !red.Exits {
-				continue
-			}
-		}
-
-		switch mode {
-		case bot.Gunyapetter, bot.DulltterTmp:
-			if err = r.SetLastUpdateTime(*v.PublishedParsed); err != nil {
-				return err
-			}
-		case bot.NicopetterNewRedirectArticle, bot.NicopetterNewArticle, bot.NicopetterModifyRedirectArticle:
-			if err = r.MarkedAsPosted(v.Link); err != nil {
-				return err
-			}
-		}
+		var skip bool
+		var red *nicopedia.Redirect
+		skip, red, err = checkRedirectConditionIsSkip(mode, v)
 		if err != nil {
 			return err
 		}
-
-		err = sns.PostTwitter(v, red, mode)
-
-		if mode == bot.NicopetterNewRedirectArticle || mode == bot.NicopetterNewArticle || mode == bot.NicopetterModifyRedirectArticle {
-
-			switch {
-			// RSSがソートされていない関係上，すべてのRSSを見るようにする配慮
-			case err != nil && err.Error() == "twitter: 187 Status is a duplicate.":
-				log.Print(err)
-				continue
-			case err != nil:
-				return err
-			}
+		if skip {
+			continue
 		}
+
+		if err = markAs(mode, r, v); err != nil {
+			return err
+		}
+
+		err = sns.Twitter(v, red, mode)
+
 		if err != nil {
+			oerr := err
 			log.Fatal(err)
-			if err = r.SetLastUpdateTime(lastPublish); err != nil {
-				return err
-			}
-			return err
+			err = r.SetLastUpdateTime(lastPublish)
+			return fmt.Errorf("original error %v, last error %v", oerr, err)
 		}
 
 		lastPublish = *v.PublishedParsed
 	}
 
-	return nil
+	return err
 }
 
 func createTwitterAuth() mytwitter.Authorization {
@@ -237,6 +203,44 @@ func createTwitterAuth() mytwitter.Authorization {
 		ConsumerKey:       os.Getenv("CONSUMER_KEY"),
 		ConsumerSecret:    os.Getenv("CONSUMER_SECRET"),
 	}
+}
+
+func markAs(mode *bot.Behavior, r *store.Redis, i *gofeed.Item) error {
+	var err error
+	switch mode {
+	case bot.Gunyapetter, bot.DulltterTmp:
+		err = r.SetLastUpdateTime(*i.PublishedParsed)
+
+	case bot.NicopetterNewRedirectArticle, bot.NicopetterNewArticle, bot.NicopetterModifyRedirectArticle:
+		err = r.MarkedAsPosted(i.Link)
+	}
+
+	return err
+}
+
+func checkRedirectConditionIsSkip(mode *bot.Behavior, i *gofeed.Item) (bool, *nicopedia.Redirect, error) {
+	if !mode.CheckRedirect {
+		return false, nil, nil
+	}
+	red, err := extractRedirect(i)
+	if err != nil {
+		return true, nil, err
+	}
+
+	switch mode.FollowRedirect {
+	case false:
+		// 新着モードでリダイレクトしているものは無視する
+		if red.Exits {
+			return true, red, nil
+		}
+	case true:
+		// リダイレクトモードでリダイレクト先が見つからないものは無視する
+		if !red.Exits {
+			return true, red, nil
+		}
+	}
+
+	return false, red, nil
 }
 
 func extractRedirect(f *gofeed.Item) (*nicopedia.Redirect, error) {
@@ -253,7 +257,7 @@ func extractRedirect(f *gofeed.Item) (*nicopedia.Redirect, error) {
 		return nil, err
 	}
 
-	return &nicopedia.Redirect{Exits: true, Title: *title}, nil
+	return &nicopedia.Redirect{Exits: true, Title: title}, nil
 }
 
 func main() {
