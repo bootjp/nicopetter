@@ -66,13 +66,13 @@ func (c *Redis) SetLastUpdateTime(t time.Time) error {
 }
 
 // URLPosted is check url tweeted.
-func (c *Redis) URLPosted(u string, exp int) (bool, error) {
+func (c *Redis) URLPosted(u string, exp int) (ok bool, err error) {
 	res, err := c.c.Exists(c.p + u).Result()
 	if err != nil {
 		return false, err
 	}
 
-	return res == 1, nil
+	return res == 0, nil
 }
 
 // MarkedAsPosted is url is tweeted mark.

@@ -28,21 +28,12 @@ func FilterDate(f []*gofeed.Item, t time.Time) []*gofeed.Item {
 func FilterMarkedAsPost(f []*gofeed.Item, r *store.Redis, mode *bot.Behavior) ([]*gofeed.Item, error) {
 	var itm []*gofeed.Item
 	for _, elem := range f {
-		var ng bool
-		var err error
-		switch mode {
-		case bot.NicopetterNewArticle:
-			ng, err = r.URLPosted(elem.Link, -1)
-		case bot.NicopetterModifyRedirectArticle:
-			ng, err = r.URLPosted(elem.Link, 86400)
-		case bot.NicopetterNewRedirectArticle:
-			ng, err = r.URLPosted(elem.Link, 86400)
-		}
-
+		ok, err := r.URLPosted(elem.Link, mode.StoreTTL)
 		if err != nil {
 			return nil, err
 		}
-		if !ng {
+
+		if ok {
 			itm = append(itm, elem)
 		}
 	}

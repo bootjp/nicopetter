@@ -14,6 +14,7 @@ type Behavior struct {
 	FollowRedirect  bool
 	IgnoreDuplicate bool
 	StorePrefix     string
+	StoreTTL        int
 }
 
 var (
@@ -25,6 +26,7 @@ var (
 		false,
 		false,
 		"gunyapetter:",
+		-1,
 	}
 
 	// DulltterTmp is Nicopedia pikokakiko tweet account. https://twitter.com/dulltter_tmp
@@ -35,6 +37,7 @@ var (
 		false,
 		false,
 		"dulltter:",
+		-1,
 	}
 
 	// NicopetterNewArticle is Nicopedia new general article tweet account.
@@ -45,6 +48,7 @@ var (
 		false,
 		true,
 		"nicopetter_new:",
+		-1,
 	}
 
 	// NicopetterNewRedirectArticle is Nicopedia general article is to redirect tweet account.
@@ -55,6 +59,7 @@ var (
 		true,
 		true,
 		"nicopetter_new_redirect:",
+		86400,
 	}
 	// NicopetterModifyRedirectArticle is Nicopedia exists article is modify the redirect.
 	NicopetterModifyRedirectArticle = &Behavior{
@@ -64,6 +69,7 @@ var (
 		true,
 		true,
 		"nicopetter_new_redirect:",
+		86400,
 	}
 )
 
