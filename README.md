@@ -9,6 +9,7 @@ cd $GOPATH/src/
 mkdir -p github.com/bootjp
 cd github.com/bootjp
 git clone git@github.com:bootjp/go_twitter_bot_for_nicopedia.git
+cd go_twitter_bot_for_nicopedia
 go get -u github.com/golang/dep/...
 dep ensure
 GOOS=linux CGO_ENABLED=0 go build -a -o out main/main.go
