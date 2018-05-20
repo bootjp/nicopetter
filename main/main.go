@@ -148,7 +148,7 @@ func routine(mode *bot.Behavior) error {
 	case bot.Gunyapetter, bot.DulltterTmp:
 		f = item.FilterDate(f, t)
 	case bot.NicopetterModifyRedirectArticle, bot.NicopetterNewArticle, bot.NicopetterNewRedirectArticle:
-		f, err = item.FilterMarkedAsPost(f, r)
+		f, err = item.FilterMarkedAsPost(f, r, mode)
 		if err != nil {
 			return err
 		}
