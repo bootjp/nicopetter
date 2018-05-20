@@ -81,7 +81,13 @@ func FetchRedirectTitle(u *url.URL) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	defer res.Body.Close()
+	defer func() {
+		err = res.Body.Close()
+		if err == nil {
+			return
+		}
+		log.Fatal("failed to close response : ", err)
+	}()
 
 	row, err := ioutil.ReadAll(res.Body)
 	if err != nil {
@@ -125,11 +131,11 @@ func routine(mode *bot.Behavior) error {
 	}
 	r := store.NewRedisClient(os.Getenv("REDIS_HOST"), i, mode.StorePrefix)
 	defer func() {
-		cerr := r.Close()
-		if cerr == nil {
+		err = r.Close()
+		if err == nil {
 			return
 		}
-		err = fmt.Errorf("failed to close: %v, the original error was %v", cerr, err)
+		log.Fatal("failed to close: redis : ", err)
 	}()
 
 	t, err := r.GetLastUpdateTime()
@@ -178,7 +184,7 @@ func routine(mode *bot.Behavior) error {
 		err = sns.Twitter(v, red, mode)
 
 		if err != nil {
-			return fmt.Errorf("original error %v, last error %v", err, r.SetLastUpdateTime(lastPublish))
+			return fmt.Errorf("original error %v, rollback error %v", err, r.SetLastUpdateTime(lastPublish))
 		}
 
 		lastPublish = *v.PublishedParsed
@@ -201,7 +207,6 @@ func markAs(mode *bot.Behavior, r *store.Redis, i *gofeed.Item) error {
 	switch mode {
 	case bot.Gunyapetter, bot.DulltterTmp:
 		err = r.SetLastUpdateTime(*i.PublishedParsed)
-
 	case bot.NicopetterNewRedirectArticle, bot.NicopetterNewArticle, bot.NicopetterModifyRedirectArticle:
 		err = r.MarkedAsPosted(i.Link)
 	}
@@ -269,6 +274,5 @@ func main() {
 	}
 	if err := app.Run(os.Args); err != nil {
 		log.Fatal(err)
-		os.Exit(1)
 	}
 }
