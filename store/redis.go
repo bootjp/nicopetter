@@ -19,9 +19,9 @@ type Redis struct {
 // RedisI is a convenient interface of Redis operation for bot.
 type RedisI interface {
 	GetLastUpdateTime() (time.Time, error)
-	SetLastUpdateTime(t time.Time) error
+	SetLastUpdateTime(time.Time) error
 	Close() error
-	URLPosted(u string) (bool, error)
+	URLPosted(string, int) (bool, error)
 	MarkedAsPosted(u string) error
 }
 
