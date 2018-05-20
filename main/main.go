@@ -2,22 +2,18 @@ package main
 
 import (
 	"os"
+	"sort"
 	"strconv"
 
-	"sort"
-
-	"net/url"
-
 	"fmt"
-
 	"log"
-
 	"net/http"
+	"net/url"
+	"strings"
 	"time"
 
-	"strings"
+	"io/ioutil"
 
-	"github.com/PuerkitoBio/goquery"
 	"github.com/bootjp/go_twitter_bot_for_nicopedia/domain/bot"
 	"github.com/bootjp/go_twitter_bot_for_nicopedia/domain/nicopedia"
 	mytwitter "github.com/bootjp/go_twitter_bot_for_nicopedia/domain/twitter"
@@ -85,30 +81,28 @@ func FetchRedirectTitle(u *url.URL) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	defer res.Body.Close()
 
-	doc, err := goquery.NewDocumentFromReader(res.Body)
+	row, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		return "", err
 	}
-	var head string
-	doc.Find("head").Each(func(i int, s *goquery.Selection) {
-		head = s.Text()
-	})
+	body := string(row)
 
-	redirect := strings.Contains(head, `location.replace`)
+	redirect := strings.Contains(body, `location.replace`)
 	if !redirect {
 		return "", ErrNoRedirect
 	}
-	f := strings.Index(head, TitleSuffix)
+	f := strings.Index(body, TitleSuffix)
 	if f == -1 {
 		return "", ErrNoRedirect
 	}
 
-	head = head[f+len(TitleSuffix):]
-	i := strings.Index(head, `'`)
-	head = head[:i]
+	body = body[f+len(TitleSuffix):]
+	i := strings.Index(body, `'`)
+	body = body[:i]
 
-	title, err := url.QueryUnescape(head)
+	title, err := url.QueryUnescape(body)
 	if err != nil {
 		return "", err
 	}
@@ -184,10 +178,7 @@ func routine(mode *bot.Behavior) error {
 		err = sns.Twitter(v, red, mode)
 
 		if err != nil {
-			oerr := err
-			log.Fatal(err)
-			err = r.SetLastUpdateTime(lastPublish)
-			return fmt.Errorf("original error %v, last error %v", oerr, err)
+			return fmt.Errorf("original error %v, last error %v", err, r.SetLastUpdateTime(lastPublish))
 		}
 
 		lastPublish = *v.PublishedParsed
