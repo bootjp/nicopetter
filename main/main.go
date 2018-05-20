@@ -92,6 +92,7 @@ func FetchRedirectTitle(u *url.URL) (*string, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer res.Body.Close()
 
 	doc, err := goquery.NewDocumentFromReader(res.Body)
 	if err != nil {
