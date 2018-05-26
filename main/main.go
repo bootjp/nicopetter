@@ -94,13 +94,20 @@ func FetchRedirectTitle(u *url.URL) (*string, error) {
 	}
 	defer res.Body.Close()
 
+	switch res.Status[:1] {
+	case "4", "5":
+		return nil, errors.New("got 40x or 50x status code.")
+	case "3":
+		log.Println("warn  got 30x statsu code.")
+	}
+
 	doc, err := goquery.NewDocumentFromReader(res.Body)
 	if err != nil {
 		return nil, err
 	}
 
 	if len(doc.Nodes) == 0 {
-		log.Fatal("got empty resonse.")
+		return nil, errors.New("got empty resonse.")
 	}
 
 	var head string
