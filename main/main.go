@@ -98,6 +98,11 @@ func FetchRedirectTitle(u *url.URL) (*string, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	if len(doc.Nodes) == 0 {
+		log.Fatal("got empty resonse.")
+	}
+
 	var head string
 	doc.Find("head").Each(func(i int, s *goquery.Selection) {
 		head = s.Text()
