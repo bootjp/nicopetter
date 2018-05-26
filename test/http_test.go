@@ -37,15 +37,17 @@ func errorRes(url string) error {
 	c := http.Client{}
 
 	r, err := c.Get(url)
+	if err != nil {
+		return err
+	}
+
 	defer func() {
 		err = r.Body.Close()
 		if err != nil {
 			log.Fatal(err)
 		}
 	}()
-	if err != nil {
-		return err
-	}
+
 	switch r.Status[:1] {
 	case "4", "5":
 		return errors.New("got 40x or 50x status code")
