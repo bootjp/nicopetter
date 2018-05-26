@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"log"
 	"net/http"
 	"testing"
 )
@@ -36,7 +37,12 @@ func errorRes(url string) error {
 	c := http.Client{}
 
 	r, err := c.Get(url)
-	defer r.Body.Close()
+	defer func() {
+		err = r.Body.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}()
 	if err != nil {
 		return err
 	}
@@ -47,5 +53,5 @@ func errorRes(url string) error {
 		return errors.New("warn  got 30x statsu code")
 	}
 
-	return r.Body.Close()
+	return err
 }
