@@ -36,18 +36,15 @@ func errorRes(url string) error {
 	c := http.Client{}
 
 	r, err := c.Get(url)
-	defer r.Body.Close()
 	if err != nil {
 		return err
 	}
 	switch r.Status[:1] {
 	case "4", "5":
 		return errors.New("got 40x or 50x status code.")
-
 	case "3":
 		return errors.New("warn  got 30x statsu code.")
-
 	}
-	return nil
 
+	return r.Body.Close()
 }
