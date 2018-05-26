@@ -89,11 +89,22 @@ func FetchRedirectTitle(u *url.URL) (string, error) {
 		log.Fatal("failed to close response : ", err)
 	}()
 
+	switch res.Status[:1] {
+	case "4", "5":
+		return "", fmt.Errorf("got %s status code", res.Status)
+	case "3":
+		log.Println("warn got 30x statsu code")
+	}
+
 	row, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		return "", err
 	}
 	body := string(row)
+
+	if body == "" {
+		return "", errors.New("got empty response")
+	}
 
 	redirect := strings.Contains(body, `location.replace`)
 	if !redirect {
