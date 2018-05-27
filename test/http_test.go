@@ -19,14 +19,22 @@ var httpTestData = []httpTestCase{
 	{"https://httpstat.us/403", true},
 	{"https://httpstat.us/400", true},
 	{"https://httpstat.us/401", true},
-	{"https://httpstat.us/302", false},
+	{"https://httpstat.us/204", false},
 }
 
 func TestHTTPStatus(t *testing.T) {
 
 	for _, v := range httpTestData {
-		if v.wantError && errorRes(v.url) == nil {
-			t.FailNow()
+		res := errorRes(v.url)
+		switch v.wantError {
+		case true:
+			if res == nil {
+				t.FailNow()
+			}
+		case false:
+			if res != nil {
+				t.FailNow()
+			}
 		}
 	}
 
@@ -52,7 +60,8 @@ func errorRes(url string) error {
 	case "4", "5":
 		return errors.New("got 40x or 50x status code")
 	case "3":
-		return errors.New("warn  got 30x statsu code")
+		return errors.New("got 40x or 50x status code")
+		log.Fatal("warn  got 30x statsu code")
 	}
 
 	return err
