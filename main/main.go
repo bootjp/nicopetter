@@ -182,11 +182,11 @@ func routine(mode *bot.Behavior) error {
 		return err
 	}
 
-	i, err := strconv.Atoi("0")
+	i, err := strconv.Atoi(os.Getenv("REDIS_INDEX"))
 	if err != nil {
 		return err
 	}
-	r := store.NewRedisClient("localhost", i, mode.StorePrefix)
+	r := store.NewRedisClient(os.Getenv("REDIS_HOST"), i, mode.StorePrefix)
 	defer r.Close()
 
 	t, err := r.GetLastUpdateTime()
@@ -314,7 +314,7 @@ func main() {
 		},
 	}
 	app.Action = func(c *cli.Context) error {
-		mode, err := bot.NewBehavior("nicopetter_new")
+		mode, err := bot.NewBehavior(c.String("mode"))
 		if err != nil {
 			return err
 		}
