@@ -133,22 +133,18 @@ func FetchArticleMeta(u *url.URL) (nicopedia.MetaData, error) {
 		}
 
 		start := cin + checkLen
-		var createDate time.Time
-		var err error
-
+		var end int
 		switch html[start : start+1] {
 		case "<":
 			start += len(`<span style="color:red;">`)
-			end := start + dateLen
-			createDate, err = time.Parse("06/01/02 15:04", html[start:end])
+			end = start + dateLen
 		default:
-			end := start + dateLen
-			createDate, err = time.Parse("06/01/02 15:04", html[start:end])
+			end = start + dateLen
 		}
+		meta.CreateAt, err = time.Parse("06/01/02 15:04", html[start:end])
 		if err != nil {
 			log.Fatal(err)
 		}
-		meta.CreateAt = createDate
 	})
 
 	redirect := strings.Contains(head, `location.replace`)
