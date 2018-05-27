@@ -59,9 +59,6 @@ func errorRes(url string) error {
 	switch r.Status[:1] {
 	case "4", "5":
 		return errors.New("got 40x or 50x status code")
-	case "3":
-		return errors.New("got 40x or 50x status code")
-		log.Fatal("warn  got 30x statsu code")
 	}
 
 	return err
