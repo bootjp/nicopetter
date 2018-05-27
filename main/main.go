@@ -166,13 +166,14 @@ func FetchArticleMeta(u *url.URL) (nicopedia.MetaData, error) {
 	i := strings.Index(head, `'`)
 	head = head[:i]
 
-	title, err := url.QueryUnescape(head)
+	meta.IsRedirect = true
+	meta.FromTitle, err = url.QueryUnescape(head)
+
 	if err != nil {
-		meta.FromTitle = title
 		return meta, err
 	}
 
-	return nicopedia.MetaData{IsRedirect: true, FromTitle: title, CreateAt: time.Now()}, nil
+	return meta, nil
 }
 
 func routine(mode *bot.Behavior) error {
