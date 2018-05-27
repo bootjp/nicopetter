@@ -37,11 +37,11 @@ type Twitter struct {
 
 // SendSNS is testable interface.
 type SendSNS interface {
-	PostTwitter(i *gofeed.Item, rd *nicopedia.Redirect, mode *bot.Behavior) error
+	PostTwitter(i *gofeed.Item, rd *nicopedia.MetaData, mode *bot.Behavior) error
 }
 
 // PostTwitter is Item to Twitter post.
-func (t *Twitter) PostTwitter(i *gofeed.Item, rd *nicopedia.Redirect, mode *bot.Behavior) error {
+func (t *Twitter) PostTwitter(i *gofeed.Item, meta nicopedia.MetaData, mode *bot.Behavior) error {
 	config := oauth1.NewConfig(t.Authorization.ConsumerKey, t.Authorization.ConsumerSecret)
 	token := oauth1.NewToken(t.Authorization.AccessToken, t.Authorization.AccessTokenSecret)
 	httpClient := config.Client(oauth1.NoContext, token)
@@ -66,9 +66,9 @@ func (t *Twitter) PostTwitter(i *gofeed.Item, rd *nicopedia.Redirect, mode *bot.
 		out = fmt.Sprintf(mode.TweetFormat, i.Title, i.Link)
 
 	case bot.NicopetterNewRedirectArticle:
-		out = fmt.Sprintf(mode.TweetFormat, i.Title, rd.Title, i.Link)
+		out = fmt.Sprintf(mode.TweetFormat, i.Title, meta.FromTitle, i.Link)
 	case bot.NicopetterModifyRedirectArticle:
-		out = fmt.Sprintf(mode.TweetFormat, i.Title, rd.Title, i.Link)
+		out = fmt.Sprintf(mode.TweetFormat, i.Title, meta.FromTitle, i.Link)
 	}
 
 	tweet, resp, err := client.Statuses.Update(out, nil)
@@ -84,13 +84,13 @@ func (t *Twitter) PostTwitter(i *gofeed.Item, rd *nicopedia.Redirect, mode *bot.
 	return nil
 }
 
-// FetchRedirectTitle is Nicopedia user redirect setting article redirect page title.
-func FetchRedirectTitle(u *url.URL) (*string, error) {
+// FetchArticleMeta is Nicopedia user redirect setting article redirect page title.
+func FetchArticleMeta(u *url.URL) (nicopedia.MetaData, error) {
 	const TitleSuffix = `location.replace('http://dic.nicovideo.jp/a/`
 	c := http.Client{Timeout: time.Duration(10 * time.Second)}
 	res, err := c.Get(u.String())
 	if err != nil {
-		return nil, err
+		return nicopedia.MetaData{}, err
 	}
 
 	defer func() {
@@ -102,18 +102,18 @@ func FetchRedirectTitle(u *url.URL) (*string, error) {
 
 	switch res.Status[:1] {
 	case "4", "5":
-		return nil, fmt.Errorf("got %s status code", res.Status)
+		return nicopedia.MetaData{}, fmt.Errorf("got %s status code", res.Status)
 	case "3":
 		log.Println("warn got 30x statsu code")
 	}
 
 	doc, err := goquery.NewDocumentFromReader(res.Body)
 	if err != nil {
-		return nil, err
+		return nicopedia.MetaData{}, err
 	}
 
 	if len(doc.Nodes) == 0 {
-		return nil, errors.New("got empty response")
+		return nicopedia.MetaData{}, errors.New("got empty response")
 	}
 
 	var head string
@@ -121,29 +121,54 @@ func FetchRedirectTitle(u *url.URL) (*string, error) {
 		head = s.Text()
 	})
 
+	meta := nicopedia.MetaData{}
+	doc.Find("#article").Each(func(i int, selection *goquery.Selection) {
+		var html = selection.Text()
+		const checkLen = len("初版作成日") + 2
+		const dateLen = len(`YY/MM/DD HH:MM`)
+		const newArticleTag = `<span style="color:red;">`
+		const newArticleTagOne = `<`
+
+		cin := strings.Index(html, "初版作成日")
+		if cin == -1 {
+			return
+		}
+
+		start := cin + checkLen
+		if html[start:start+1] == newArticleTagOne {
+			start += len(newArticleTag)
+		}
+		end := start + dateLen
+		meta.CreateAt, err = time.Parse("06/01/02 15:04", html[start:end])
+		if err != nil {
+			log.Fatal(err)
+		}
+	})
+
 	redirect := strings.Contains(head, `location.replace`)
 	if !redirect {
-		return nil, ErrNoRedirect
+		meta.IsRedirect = false
+		return meta, nil
 	}
 	f := strings.Index(head, TitleSuffix)
 	if f == -1 {
-		return nil, ErrNoRedirect
+		meta.IsRedirect = false
+		return meta, nil
 	}
 
 	head = head[f+len(TitleSuffix):]
 	i := strings.Index(head, `'`)
 	head = head[:i]
 
-	title, err := url.QueryUnescape(head)
+	meta.IsRedirect = true
+	meta.FromTitle, err = url.QueryUnescape(head)
+
 	if err != nil {
-		return nil, err
+		return meta, err
 	}
 
-	return &title, nil
+	return meta, nil
 }
-
-// ErrNoRedirect not redirect article err.
-var ErrNoRedirect = errors.New("no redirect in response")
 
 func routine(mode *bot.Behavior) error {
 	f, err := item.Fetch(mode.FeedURL)
@@ -186,24 +211,29 @@ func routine(mode *bot.Behavior) error {
 
 	lastPublish := t
 	for _, v := range f {
-		red := &nicopedia.Redirect{Exits: false}
+		meta := nicopedia.MetaData{IsRedirect: false}
 		switch mode {
 		case bot.NicopetterNewArticle:
-			red, err = extractRedirect(v)
+			meta, err = extractRedirect(v)
 			if err != nil {
 				return err
 			}
 			// 新着モードでリダイレクトしているものは無視する
-			if red.Exits {
+			if meta.IsRedirect {
 				continue
 			}
+
+			if v.PublishedParsed.Format("2006-01-02 15:04") != meta.CreateAt.Format("2006-01-02 15:04") {
+				continue
+			}
+
 		case bot.NicopetterModifyRedirectArticle, bot.NicopetterNewRedirectArticle:
-			red, err = extractRedirect(v)
+			meta, err = extractRedirect(v)
 			if err != nil {
 				return err
 			}
 			// リダイレクトモードでリダイレクト先が見つからないものは無視する
-			if !red.Exits {
+			if !meta.IsRedirect {
 				continue
 			}
 		}
@@ -222,7 +252,7 @@ func routine(mode *bot.Behavior) error {
 			return err
 		}
 
-		err = sns.PostTwitter(v, red, mode)
+		err = sns.PostTwitter(v, meta, mode)
 
 		if mode == bot.NicopetterNewRedirectArticle || mode == bot.NicopetterNewArticle || mode == bot.NicopetterModifyRedirectArticle {
 
@@ -258,21 +288,14 @@ func createTwitterAuth() mytwitter.Authorization {
 	}
 }
 
-func extractRedirect(f *gofeed.Item) (*nicopedia.Redirect, error) {
+func extractRedirect(f *gofeed.Item) (nicopedia.MetaData, error) {
 	u, err := url.Parse(f.Link)
 	if err != nil {
-		return nil, err
+		return nicopedia.MetaData{}, err
 	}
 
-	title, err := FetchRedirectTitle(u)
-	if err != nil {
-		if err.Error() == "no redirect in response" {
-			return &nicopedia.Redirect{Exits: false}, nil
-		}
-		return nil, err
-	}
+	return FetchArticleMeta(u)
 
-	return &nicopedia.Redirect{Exits: true, Title: *title}, nil
 }
 
 func main() {
