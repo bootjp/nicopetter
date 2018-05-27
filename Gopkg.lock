@@ -23,7 +23,7 @@
   branch = "master"
   name = "github.com/dghubble/go-twitter"
   packages = ["twitter"]
-  revision = "c4115fa44a928413e0b857e0eb47376ffde3a61a"
+  revision = "093ee2cf4e32ef608cded0ace84d5d82a52da4fa"
 
 [[projects]]
   name = "github.com/dghubble/oauth1"
@@ -49,8 +49,8 @@
     "internal/singleflight",
     "internal/util"
   ]
-  revision = "877867d2845fbaf86798befe410b6ceb6f5c29a3"
-  version = "v6.10.2"
+  revision = "0f9028adf0837cf93c9705817493e5f6997cf026"
+  version = "v6.11.0"
 
 [[projects]]
   branch = "master"
@@ -91,7 +91,7 @@
     "html/atom",
     "html/charset"
   ]
-  revision = "640f4622ab692b87c2f3a94265e6f579fe38263d"
+  revision = "dfa909b99c79129e1100513e5cd36307665e5723"
 
 [[projects]]
   name = "golang.org/x/text"
