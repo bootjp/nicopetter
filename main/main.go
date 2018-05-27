@@ -130,26 +130,14 @@ func FetchRedirectTitle(u *url.URL) (string, error) {
 // ErrNoRedirect not redirect article err.
 var ErrNoRedirect = errors.New("no redirect in response")
 
-func routine(mode *bot.Behavior) error {
+func routine(mode *bot.Behavior, r *store.Redis) error {
 	f, err := item.Fetch(mode.FeedURL)
 	if err != nil {
 		return err
 	}
 
-	i, err := strconv.Atoi(os.Getenv("REDIS_INDEX"))
-	if err != nil {
-		return err
-	}
-	r := store.NewRedisClient(os.Getenv("REDIS_HOST"), i, mode.StorePrefix)
-	defer func() {
-		err = r.Close()
-		if err == nil {
-			return
-		}
-		log.Fatal("failed to close: redis : ", err)
-	}()
-
-	t, err := r.GetLastUpdateTime()
+	var t time.Time
+	t, err = r.GetLastUpdateTime()
 	if err != nil {
 		return err
 	}
@@ -281,7 +269,23 @@ func main() {
 		if err != nil {
 			return err
 		}
-		return routine(mode)
+
+		redI, err := strconv.Atoi(os.Getenv("REDIS_INDEX"))
+		if err != nil {
+			return err
+		}
+		r := store.NewRedisClient(os.Getenv("REDIS_HOST"), redI, mode.StorePrefix)
+		defer func() {
+			err = r.Close()
+			if err == nil {
+				return
+			}
+			log.Fatal("failed to close: redis : ", err)
+		}()
+		if err != nil {
+			return err
+		}
+		return routine(mode, r)
 	}
 	if err := app.Run(os.Args); err != nil {
 		log.Fatal(err)

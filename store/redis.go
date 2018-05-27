@@ -23,6 +23,7 @@ type RedisI interface {
 	Close() error
 	URLPosted(string, int) (bool, error)
 	MarkedAsPosted(u string) error
+	Row() *redis.Client
 }
 
 // NewRedisClient is a new store connect instance  operation for bot.
@@ -87,4 +88,8 @@ func (c *Redis) MarkedAsPosted(u string) error {
 	}
 
 	return errors.New("redis set error MarkedAsPosted")
+}
+
+func (c *Redis) Row() *redis.Client {
+	return c.c
 }
