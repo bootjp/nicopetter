@@ -126,6 +126,8 @@ func FetchArticleMeta(u *url.URL) (nicopedia.MetaData, error) {
 		var html = selection.Text()
 		const checkLen = len("初版作成日") + 2
 		const dateLen = len(`YY/MM/DD HH:MM`)
+		const newArticleTag = `<span style="color:red;">`
+		const newArticleTagOne = `<`
 
 		cin := strings.Index(html, "初版作成日")
 		if cin == -1 {
@@ -133,14 +135,10 @@ func FetchArticleMeta(u *url.URL) (nicopedia.MetaData, error) {
 		}
 
 		start := cin + checkLen
-		var end int
-		switch html[start : start+1] {
-		case "<":
-			start += len(`<span style="color:red;">`)
-			end = start + dateLen
-		default:
-			end = start + dateLen
+		if html[start:start+1] == newArticleTagOne {
+			start += len(newArticleTag)
 		}
+		end := start + dateLen
 		meta.CreateAt, err = time.Parse("06/01/02 15:04", html[start:end])
 		if err != nil {
 			log.Fatal(err)
