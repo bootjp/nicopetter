@@ -141,6 +141,7 @@ func FetchArticleMeta(u *url.URL) (nicopedia.MetaData, error) {
 		end := start + dateLen
 		meta.CreateAt, err = time.Parse("06/01/02 15:04", html[start:end])
 		if err != nil {
+			log.Println(u.String(), start, end, html[start:end])
 			log.Fatal(err)
 		}
 	})
