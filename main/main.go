@@ -129,7 +129,7 @@ func FetchArticleMeta(u *url.URL) (nicopedia.MetaData, error) {
 		const newArticleTag = `<span style="color:red;">`
 		const newArticleTagOne = `<`
 
-		cin := strings.Index(html, "初版作成日")
+		cin := strings.LastIndex(html, "初版作成日")
 		if cin == -1 {
 			return
 		}
