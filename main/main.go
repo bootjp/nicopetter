@@ -22,7 +22,6 @@ import (
 	"github.com/dghubble/go-twitter/twitter"
 	"github.com/dghubble/oauth1"
 	"github.com/mmcdole/gofeed"
-	"github.com/pkg/errors"
 	"gopkg.in/urfave/cli.v2"
 )
 
@@ -32,7 +31,7 @@ type SNS struct {
 }
 
 // Twitter is Item to SNS post.
-func (t *SNS) Twitter(i *gofeed.Item, rd *nicopedia.Redirect, mode *bot.Behavior) error {
+func (t *SNS) Twitter(i *gofeed.Item, meta *nicopedia.MetaData, mode *bot.Behavior) error {
 	config := oauth1.NewConfig(t.Authorization.ConsumerKey, t.Authorization.ConsumerSecret)
 	token := oauth1.NewToken(t.Authorization.AccessToken, t.Authorization.AccessTokenSecret)
 	httpClient := config.Client(oauth1.NoContext, token)
@@ -54,9 +53,9 @@ func (t *SNS) Twitter(i *gofeed.Item, rd *nicopedia.Redirect, mode *bot.Behavior
 	case bot.NicopetterNewArticle:
 		out = fmt.Sprintf(mode.TweetFormat, i.Title, i.Link)
 	case bot.NicopetterNewRedirectArticle:
-		out = fmt.Sprintf(mode.TweetFormat, i.Title, rd.Title, i.Link)
+		out = fmt.Sprintf(mode.TweetFormat, i.Title, meta.FromTitle, i.Link)
 	case bot.NicopetterModifyRedirectArticle:
-		out = fmt.Sprintf(mode.TweetFormat, i.Title, rd.Title, i.Link)
+		out = fmt.Sprintf(mode.TweetFormat, i.Title, meta.FromTitle, i.Link)
 	}
 
 	tweet, resp, err := client.Statuses.Update(out, nil)
@@ -72,14 +71,14 @@ func (t *SNS) Twitter(i *gofeed.Item, rd *nicopedia.Redirect, mode *bot.Behavior
 	return nil
 }
 
-// FetchRedirectTitle is Nicopedia user redirect setting article redirect page title.
-func FetchRedirectTitle(u *url.URL) (string, error) {
+// FetchArticleMeta is Nicopedia user redirect setting article redirect page title.
+func FetchArticleMeta(u *url.URL) (nicopedia.MetaData, error) {
 
 	const TitleSuffix = `location.replace('http://dic.nicovideo.jp/a/`
 	c := http.Client{Timeout: time.Duration(10) * time.Second}
 	res, err := c.Get(u.String())
 	if err != nil {
-		return "", err
+		return nicopedia.MetaData{}, err
 	}
 	defer func() {
 		err = res.Body.Close()
@@ -91,44 +90,77 @@ func FetchRedirectTitle(u *url.URL) (string, error) {
 
 	switch res.Status[:1] {
 	case "4", "5":
-		return "", fmt.Errorf("got %s status code", res.Status)
+		return nicopedia.MetaData{}, fmt.Errorf("got %s status code", res.Status)
 	case "3":
 		log.Println("warn got 30x statsu code")
 	}
 
 	row, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		return "", err
+		return nicopedia.MetaData{}, err
 	}
 	body := string(row)
+	meta := nicopedia.MetaData{}
 
-	if body == "" {
-		return "", errors.New("got empty response")
-	}
+	// if len(doc.Nodes) == 0 {
+	// 	return nicopedia.MetaData{}, errors.New("got empty response")
+	// }
+	//
+	// var head string
+	// doc.Find("head").Each(func(i int, s *goquery.Selection) {
+	// 	head = s.Text()
+	// })
+	//
+
+	// doc.Find("#article").Each(func(i int, selection *goquery.Selection) {
+	// 	var html = selection.Text()
+	// 	const checkLen = len("初版作成日") + 2
+	// 	const dateLen = len(`YY/MM/DD HH:MM`)
+	// 	const newArticleTag = `<span style="color:red;">`
+	// 	const newArticleTagOne = `<`
+	//
+	// 	cin := strings.LastIndex(html, "初版作成日")
+	// 	if cin == -1 {
+	// 		return
+	// 	}
+	//
+	// 	start := cin + checkLen
+	// 	if html[start:start+1] == newArticleTagOne {
+	// 		start += len(newArticleTag)
+	// 	}
+	// 	end := start + dateLen
+	// 	meta.CreateAt, err = time.Parse("06/01/02 15:04", html[start:end])
+	// 	if err != nil {
+	// 		log.Println(u.String(), start, end, html[start:end])
+	// 		log.Fatal(err)
+	// 	}
+	// })
 
 	redirect := strings.Contains(body, `location.replace`)
 	if !redirect {
-		return "", ErrNoRedirect
+		meta.IsRedirect = false
+		return meta, nil
 	}
+
 	f := strings.Index(body, TitleSuffix)
 	if f == -1 {
-		return "", ErrNoRedirect
+		meta.IsRedirect = false
+		return meta, nil
 	}
 
 	body = body[f+len(TitleSuffix):]
 	i := strings.Index(body, `'`)
 	body = body[:i]
 
-	title, err := url.QueryUnescape(body)
+	meta.IsRedirect = true
+	meta.FromTitle, err = url.QueryUnescape(body)
+
 	if err != nil {
-		return "", err
+		return meta, err
 	}
 
-	return title, nil
+	return meta, nil
 }
-
-// ErrNoRedirect not redirect article err.
-var ErrNoRedirect = errors.New("no redirect in response")
 
 func routine(mode *bot.Behavior, r *store.Redis) error {
 	f, err := item.Fetch(mode.FeedURL)
@@ -167,8 +199,8 @@ func routine(mode *bot.Behavior, r *store.Redis) error {
 
 	for _, v := range f {
 		var skip bool
-		var red *nicopedia.Redirect
-		skip, red, err = checkRedirectConditionIsSkip(mode, v)
+		var meta *nicopedia.MetaData
+		skip, meta, err = checkRedirectConditionIsSkip(mode, v)
 		if err != nil {
 			return err
 		}
@@ -180,7 +212,7 @@ func routine(mode *bot.Behavior, r *store.Redis) error {
 			return err
 		}
 
-		err = sns.Twitter(v, red, mode)
+		err = sns.Twitter(v, meta, mode)
 
 		if err != nil {
 			return fmt.Errorf("original error %v, rollback error %v", err, r.SetLastUpdateTime(lastPublish))
@@ -213,11 +245,11 @@ func markAs(mode *bot.Behavior, r *store.Redis, i *gofeed.Item) error {
 	return err
 }
 
-func checkRedirectConditionIsSkip(mode *bot.Behavior, i *gofeed.Item) (bool, *nicopedia.Redirect, error) {
+func checkRedirectConditionIsSkip(mode *bot.Behavior, i *gofeed.Item) (bool, *nicopedia.MetaData, error) {
 	if !mode.CheckRedirect {
 		return false, nil, nil
 	}
-	red, err := extractRedirect(i)
+	meta, err := extractRedirect(i)
 	if err != nil {
 		return true, nil, err
 	}
@@ -225,34 +257,26 @@ func checkRedirectConditionIsSkip(mode *bot.Behavior, i *gofeed.Item) (bool, *ni
 	switch mode.FollowRedirect {
 	case false:
 		// 新着モードでリダイレクトしているものは無視する
-		if red.Exits {
-			return true, red, nil
+		if meta.IsRedirect {
+			return true, &meta, nil
 		}
 	case true:
 		// リダイレクトモードでリダイレクト先が見つからないものは無視する
-		if !red.Exits {
-			return true, red, nil
+		if !meta.IsRedirect {
+			return true, &meta, nil
 		}
 	}
 
-	return false, red, nil
+	return false, &meta, nil
 }
 
-func extractRedirect(f *gofeed.Item) (*nicopedia.Redirect, error) {
+func extractRedirect(f *gofeed.Item) (nicopedia.MetaData, error) {
 	u, err := url.Parse(f.Link)
 	if err != nil {
-		return nil, err
+		return nicopedia.MetaData{}, err
 	}
 
-	title, err := FetchRedirectTitle(u)
-	if err != nil {
-		if err.Error() == "no redirect in response" {
-			return &nicopedia.Redirect{Exits: false}, nil
-		}
-		return nil, err
-	}
-
-	return &nicopedia.Redirect{Exits: true, Title: title}, nil
+	return FetchArticleMeta(u)
 }
 
 func main() {
