@@ -158,41 +158,39 @@ func FetchArticleMeta(u fmt.Stringer) (nicopedia.MetaData, error) {
 }
 
 func routine(mode *bot.Behavior, r *store.Redis) error {
-	f, err := item.Fetch(mode.FeedURL)
+	itm, err := item.Fetch(mode.FeedURL)
 	if err != nil {
 		return err
 	}
 
-	var t time.Time
-	t, err = r.GetLastUpdateTime()
+	var lastPublish time.Time
+	lastPublish, err = r.GetLastUpdateTime()
 	if err != nil {
 		return err
 	}
 
 	switch mode {
 	case bot.Gunyapetter, bot.DulltterTmp:
-		f = item.FilterDate(f, t)
+		itm = item.FilterDate(itm, lastPublish)
 	case bot.NicopetterModifyRedirectArticle, bot.NicopetterNewArticle, bot.NicopetterNewRedirectArticle:
-		f, err = item.FilterMarkedAsPost(f, r, mode)
+		itm, err = item.FilterMarkedAsPost(itm, r, mode)
 		if err != nil {
 			return err
 		}
 	}
 
-	if len(f) == 0 {
+	if len(itm) == 0 {
 		return nil
 	}
 
 	// sort
-	sort.Slice(f, func(i, j int) bool {
-		return f[i].PublishedParsed.Before(*f[j].PublishedParsed)
+	sort.Slice(itm, func(i, j int) bool {
+		return itm[i].PublishedParsed.Before(*itm[j].PublishedParsed)
 	})
 
 	sns := SNS{createTwitterAuth()}
 
-	lastPublish := t
-
-	for _, v := range f {
+	for _, v := range itm {
 		var skip bool
 		var meta *nicopedia.MetaData
 		skip, meta, err = checkRedirectConditionIsSkip(mode, v)
@@ -207,9 +205,7 @@ func routine(mode *bot.Behavior, r *store.Redis) error {
 			return err
 		}
 
-		err = sns.Twitter(v, meta, mode)
-
-		if err != nil {
+		if err = sns.Twitter(v, meta, mode); err != nil {
 			return fmt.Errorf("original error %v, rollback error %v", err, r.SetLastUpdateTime(lastPublish))
 		}
 
