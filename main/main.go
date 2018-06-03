@@ -154,12 +154,7 @@ func FetchArticleMeta(u *url.URL) (nicopedia.MetaData, error) {
 
 	meta.IsRedirect = true
 	meta.FromTitle, err = url.QueryUnescape(body)
-
-	if err != nil {
-		return meta, err
-	}
-
-	return meta, nil
+	return meta, err
 }
 
 func routine(mode *bot.Behavior, r *store.Redis) error {

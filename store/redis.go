@@ -90,6 +90,7 @@ func (c *Redis) MarkedAsPosted(u string) error {
 	return errors.New("redis set error MarkedAsPosted")
 }
 
+// Row is return go-redis/redis row instance.
 func (c *Redis) Row() *redis.Client {
 	return c.c
 }
