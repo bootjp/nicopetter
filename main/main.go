@@ -87,9 +87,10 @@ func (t *Twitter) PostTwitter(i *gofeed.Item, meta nicopedia.MetaData, mode *bot
 // FetchArticleMeta is Nicopedia user redirect setting article redirect page title.
 func FetchArticleMeta(u *url.URL) (nicopedia.MetaData, error) {
 	const TitleSuffix = `location.replace('http://dic.nicovideo.jp/a/`
-	c := http.Client{Timeout: time.Duration(10 * time.Second)}
+	c := http.Client{Timeout: time.Duration(15 * time.Second)}
 	res, err := c.Get(u.String())
 	if err != nil {
+		log.Println(u.String())
 		return nicopedia.MetaData{}, err
 	}
 
