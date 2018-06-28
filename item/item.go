@@ -7,6 +7,11 @@ import (
 
 	"log"
 
+	"io/ioutil"
+
+	"strings"
+	"unicode"
+
 	"github.com/bootjp/go_twitter_bot_for_nicopedia/domain/bot"
 	"github.com/bootjp/go_twitter_bot_for_nicopedia/store"
 	"github.com/mmcdole/gofeed"
@@ -52,8 +57,34 @@ func FilterMarkedAsPost(f []*gofeed.Item, r *store.Redis, mode *bot.Behavior) ([
 
 // Fetch is got url to fetch and return rss.
 func Fetch(URL string) ([]*gofeed.Item, error) {
-	p := gofeed.Parser{Client: &http.Client{Timeout: time.Duration(15 * time.Second)}}
-	f, err := p.ParseURL(URL)
+	c := http.Client{Timeout: time.Duration(15 * time.Second)}
+	res, err := c.Get(URL)
+	if err != nil {
+		return nil, err
+	}
+
+	defer func() {
+		err = res.Body.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}()
+
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	printOnly := func(r rune) rune {
+		if unicode.IsPrint(r) {
+			return r
+		}
+		return -1
+	}
+	body = []byte(strings.Map(printOnly, string(body)))
+
+	p := gofeed.NewParser()
+	f, err := p.ParseString(string(body[:]))
 	if err != nil {
 		log.Println(URL)
 		return nil, err
