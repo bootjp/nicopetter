@@ -3,12 +3,11 @@ language: go
 install: true
 
 go:
-  - "1.10"
+  - "1.11.1"
 
 before_install:
   - go get -u github.com/golang/dep/...
   - dep ensure
-  - go get -v github.com/golang/lint/golint
 
 script:
   - cd test && go test
