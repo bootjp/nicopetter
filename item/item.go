@@ -1,6 +1,7 @@
 package item
 
 import (
+	"crypto/tls"
 	"time"
 
 	"net/http"
@@ -57,7 +58,11 @@ func FilterMarkedAsPost(f []*gofeed.Item, r *store.Redis, mode *bot.Behavior) ([
 
 // Fetch is got url to fetch and return rss.
 func Fetch(URL string) ([]*gofeed.Item, error) {
-	c := http.Client{Timeout: time.Duration(15 * time.Second)}
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
+	c := http.Client{Transport: tr, Timeout: time.Duration(15 * time.Second)}
+
 	res, err := c.Get(URL)
 	if err != nil {
 		return nil, err

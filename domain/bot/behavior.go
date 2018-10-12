@@ -19,7 +19,7 @@ var (
 	// Gunyapetter is Nicopedia oekakiko tweet account. https://twitter.com/gunyapetter
 	Gunyapetter = &Behavior{
 		"%s%s に %s というお絵カキコが投稿されたよ。%s",
-		"http://dic.nicovideo.jp/feed/rss/n/oekaki",
+		"https://dic.nicovideo.jp/feed/rss/n/oekaki",
 		false,
 		false,
 		"gunyapetter:",
@@ -28,7 +28,7 @@ var (
 	// DulltterTmp is Nicopedia pikokakiko tweet account. https://twitter.com/dulltter_tmp
 	DulltterTmp = &Behavior{
 		"%s%s に %s というピコカキコが投稿されたよ。%s",
-		"http://dic.nicovideo.jp/feed/rss/n/mml",
+		"https://dic.nicovideo.jp/feed/rss/n/mml",
 		false,
 		false,
 		"dulltter:",
@@ -37,7 +37,7 @@ var (
 	// NicopetterNewArticle is Nicopedia new general article tweet account.
 	NicopetterNewArticle = &Behavior{
 		"%s の記事ができたよ。%s",
-		"http://dic.nicovideo.jp/feed/rss/n/a",
+		"https://dic.nicovideo.jp/feed/rss/n/a",
 		true,
 		false,
 		"nicopetter_new:",
@@ -46,14 +46,14 @@ var (
 	// NicopetterRedirectArticle is Nicopedia general article is to redirect tweet account.
 	NicopetterNewRedirectArticle = &Behavior{
 		"%s から %s へのリダイレクトができたよ。 %s",
-		"http://dic.nicovideo.jp/feed/rss/n/a",
+		"https://dic.nicovideo.jp/feed/rss/n/a",
 		true,
 		true,
 		"nicopetter_new_redirect:",
 	}
 	NicopetterModifyRedirectArticle = &Behavior{
 		"%s から %s へのリダイレクトができたよ。 %s",
-		"http://dic.nicovideo.jp/feed/rss/u/a",
+		"https://dic.nicovideo.jp/feed/rss/u/a",
 		true,
 		true,
 		"nicopetter_new_redirect:",
