@@ -2,12 +2,12 @@
 
 
 [[projects]]
-  digest = "1:bff7b2530f02b143623e260c11df5cbf34e0faeaca6aa001a8be31f333518ca9"
+  digest = "1:a62f6ed230a8cd138a9efbe718e7d0b0294f139266f5f55cd942769a9aac8de2"
   name = "github.com/PuerkitoBio/goquery"
   packages = ["."]
   pruneopts = "UT"
-  revision = "a86ea073017a6beddef78c8659e7224e8ca634b0"
-  version = "v1.4.0"
+  revision = "dc2ec5c7ca4d9aae063b79b9f581dd3ea6afd2b2"
+  version = "v1.4.1"
 
 [[projects]]
   digest = "1:66b3310cf22cdc96c35ef84ede4f7b9b370971c4025f394c89a2638729653b11"
@@ -27,11 +27,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:0027577be21451a9b1b743959f60a8af998e8cdd819d060798f3e6a04f8ce574"
+  digest = "1:0cdb65f3b28d37708cbb653a0193f886f141b16c7ee2489ce6fad15771673693"
   name = "github.com/dghubble/go-twitter"
   packages = ["twitter"]
   pruneopts = "UT"
-  revision = "093ee2cf4e32ef608cded0ace84d5d82a52da4fa"
+  revision = "a34e9059cd58e96429cee9c8a87fd8d907da6843"
 
 [[projects]]
   digest = "1:144f5984ed1f07aa8fa2468844f856b1ac8e93ac94e1fd19fbf69ce034d9ef92"
@@ -50,7 +50,7 @@
   version = "v1.1.0"
 
 [[projects]]
-  digest = "1:3e17558cd8b5a432013d1a70eac5c1f3cb0e9b892d6772801b64749e3fb8e232"
+  digest = "1:7c2fd446293ff7799cc496d3446e674ee67902d119f244de645caf95dff1bb98"
   name = "github.com/go-redis/redis"
   packages = [
     ".",
@@ -63,8 +63,8 @@
     "internal/util",
   ]
   pruneopts = "UT"
-  revision = "0f9028adf0837cf93c9705817493e5f6997cf026"
-  version = "v6.11.0"
+  revision = "f3bba01df2026fc865f7782948845db9cf44cf23"
+  version = "v6.14.1"
 
 [[projects]]
   branch = "master"
