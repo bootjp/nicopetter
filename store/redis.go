@@ -21,7 +21,7 @@ type RedisI interface {
 	GetLastUpdateTime() (time.Time, error)
 	SetLastUpdateTime(t time.Time) error
 	Close() error
-	URLPosted(u string) (bool, error)
+	URLPosted(u string, exp int) (bool, error)
 	MarkedAsPosted(u string) error
 }
 
