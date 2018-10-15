@@ -31,7 +31,7 @@
   name = "github.com/dghubble/go-twitter"
   packages = ["twitter"]
   pruneopts = "UT"
-  revision = "a34e9059cd58e96429cee9c8a87fd8d907da6843"
+  revision = "e75339c4bc3d739058b5e43806e7accda132fb53"
 
 [[projects]]
   digest = "1:144f5984ed1f07aa8fa2468844f856b1ac8e93ac94e1fd19fbf69ce034d9ef92"
