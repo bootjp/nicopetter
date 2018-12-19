@@ -27,19 +27,19 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:0cdb65f3b28d37708cbb653a0193f886f141b16c7ee2489ce6fad15771673693"
+  digest = "1:4df66ab104e315cae30e5630f4563bf7b46661f8efea9a0bc4ff2edde4dfaab0"
   name = "github.com/dghubble/go-twitter"
   packages = ["twitter"]
   pruneopts = "UT"
-  revision = "e75339c4bc3d739058b5e43806e7accda132fb53"
+  revision = "7ecc41c771b6fe11669159da651b6adf06ee60bf"
 
 [[projects]]
-  digest = "1:f3cacf5fd0e718de3f43af615e84372b318f61889140f6854f98b05894001d99"
+  digest = "1:144f5984ed1f07aa8fa2468844f856b1ac8e93ac94e1fd19fbf69ce034d9ef92"
   name = "github.com/dghubble/oauth1"
   packages = ["."]
   pruneopts = "UT"
-  revision = "f0fe2bff8fbf301b33359ca431e4afc90390aab0"
-  version = "v0.5.0"
+  revision = "70562a5920ad9b6ff03ef697c0f90ae569abbd2b"
+  version = "v0.4.0"
 
 [[projects]]
   digest = "1:ace1aef6acdf2c4647365dc87c14fb8b71ed8bb0b3ae114ffb216614a24da219"
