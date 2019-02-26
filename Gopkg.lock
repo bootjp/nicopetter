@@ -27,11 +27,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:4df66ab104e315cae30e5630f4563bf7b46661f8efea9a0bc4ff2edde4dfaab0"
+  digest = "1:dbafc2ff5b1aaf1a66cda9fe7801c0c87535e513700ef62de968d22a99defa12"
   name = "github.com/dghubble/go-twitter"
   packages = ["twitter"]
   pruneopts = "UT"
-  revision = "7ecc41c771b6fe11669159da651b6adf06ee60bf"
+  revision = "7fd79e2bcc65f2e35ee1ada816481ab3e0c64d2a"
 
 [[projects]]
   digest = "1:144f5984ed1f07aa8fa2468844f856b1ac8e93ac94e1fd19fbf69ce034d9ef92"
