@@ -4,13 +4,10 @@ install: true
 dist: trusty
 
 go:
-  - "1.11.1"
+  - "1.11.5"
 
 script:
   - cd test && env GO111MODULE=on go test
   - env GO111MODULE=on go test -v -race $(env GO111MODULE=on go list ./... | grep -v "/vendor/")
   - env GO111MODULE=on go vet $(env GO111MODULE=on go list ./... | grep -v "/vendor/")
 
-deploy:
-  on:
-    condition: $TRAVIS_GO_VERSION =~ ^1\.11\.[0-9]+$
