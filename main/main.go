@@ -187,7 +187,9 @@ func routine(mode *bot.Behavior) error {
 		return err
 	}
 	r := store.NewRedisClient(os.Getenv("REDIS_HOST"), i, mode.StorePrefix)
-	defer r.Close()
+	defer func() {
+		_ = r.Close()
+	}()
 
 	t, err := r.GetLastUpdateTime()
 	if err != nil {
@@ -272,7 +274,6 @@ func routine(mode *bot.Behavior) error {
 			}
 		}
 		if err != nil {
-			log.Fatal(err)
 			if err = r.SetLastUpdateTime(lastPublish); err != nil {
 				return err
 			}
@@ -322,6 +323,5 @@ func main() {
 	}
 	if err := app.Run(os.Args); err != nil {
 		log.Fatal(err)
-		os.Exit(1)
 	}
 }
