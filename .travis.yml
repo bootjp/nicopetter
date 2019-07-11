@@ -1,19 +1,16 @@
 language: go
 
 install: true
+dist: trusty
 
 go:
   - "1.11.1"
 
-before_install:
-  - go get -u github.com/golang/dep/...
-  - dep ensure
-
 script:
-  - cd test && go test
-  - go test -v -race $(go list ./... | grep -v "/vendor/")
-  - go vet $(go list ./... | grep -v "/vendor/")
+  - cd test && env GO111MODULE=on go test
+  - env GO111MODULE=on go test -v -race $(env GO111MODULE=on go list ./... | grep -v "/vendor/")
+  - env GO111MODULE=on go vet $(env GO111MODULE=on go list ./... | grep -v "/vendor/")
 
 deploy:
   on:
-    condition: $TRAVIS_GO_VERSION =~ ^1\.10\.[0-9]+$
+    condition: $TRAVIS_GO_VERSION =~ ^1\.11\.[0-9]+$
