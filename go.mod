@@ -1,7 +1,7 @@
 module github.com/bootjp/go_twitter_bot_for_nicopedia
 
 require (
-	github.com/PuerkitoBio/goquery v1.5.1
+	github.com/PuerkitoBio/goquery v1.6.1
 	github.com/cenkalti/backoff v2.0.0+incompatible // indirect
 	github.com/dghubble/go-twitter v0.0.0-20190512073027-53f972dc4b06
 	github.com/dghubble/oauth1 v0.6.0
