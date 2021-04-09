@@ -10,7 +10,7 @@ require (
 	github.com/dghubble/sling v1.1.0 // indirect
 	github.com/go-redis/redis v0.0.0-20190503082931-75795aa4236d
 	github.com/google/go-querystring v0.0.0-20170111101155-53e6ce116135 // indirect
-	github.com/mmcdole/gofeed v1.1.0
+	github.com/mmcdole/gofeed v1.1.1
 	github.com/pkg/errors v0.9.1
 	gopkg.in/urfave/cli.v2 v2.0.0-20180128182452-d3ae77c26ac8
 )
