@@ -7,7 +7,8 @@ require (
 	github.com/cenkalti/backoff v2.0.0+incompatible // indirect
 	github.com/dghubble/go-twitter v0.0.0-20211002212826-ad02880e616b
 	github.com/dghubble/oauth1 v0.7.0
-	github.com/go-redis/redis v0.0.0-20190503082931-75795aa4236d
+	github.com/go-redis/redis v6.15.9+incompatible
+	github.com/go-redis/redis/v8 v8.11.4
 	github.com/mmcdole/gofeed v1.1.3
 	github.com/pkg/errors v0.9.1
 	gopkg.in/urfave/cli.v2 v2.0.0-20180128182452-d3ae77c26ac8
