@@ -11,5 +11,5 @@ require (
 	github.com/go-redis/redis/v8 v8.11.4
 	github.com/mmcdole/gofeed v1.1.3
 	github.com/pkg/errors v0.9.1
-	gopkg.in/urfave/cli.v2 v2.0.0-20180128182452-d3ae77c26ac8
+	gopkg.in/urfave/cli.v2 v2.3.0
 )
