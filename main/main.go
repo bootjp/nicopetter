@@ -1,7 +1,6 @@
 package main
 
 import (
-	"crypto/tls"
 	"os"
 	"strconv"
 
@@ -88,10 +87,7 @@ func (t *Twitter) PostTwitter(i *gofeed.Item, meta nicopedia.MetaData, mode *bot
 // FetchArticleMeta is Nicopedia user redirect setting article redirect page title.
 func FetchArticleMeta(u *url.URL) (nicopedia.MetaData, error) {
 	const TitleSuffix = `location.replace('https://dic.nicovideo.jp/a/`
-	tr := &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
-	}
-	c := http.Client{Transport: tr, Timeout: time.Duration(15 * time.Second)}
+	c := http.Client{Timeout: time.Duration(15 * time.Second)}
 	res, err := c.Get(u.String())
 	if err != nil {
 		log.Println(u.String())
