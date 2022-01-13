@@ -5,7 +5,7 @@ go 1.17
 require (
 	github.com/PuerkitoBio/goquery v1.8.0
 	github.com/dghubble/go-twitter v0.0.0-20211115160449-93a8679adecb
-	github.com/dghubble/oauth1 v0.7.0
+	github.com/dghubble/oauth1 v0.7.1
 	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/mmcdole/gofeed v1.1.3
 	github.com/pkg/errors v0.9.1
