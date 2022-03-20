@@ -27,7 +27,7 @@ import (
 	"github.com/dghubble/oauth1"
 	"github.com/mmcdole/gofeed"
 	"github.com/pkg/errors"
-	"gopkg.in/urfave/cli.v2"
+	"github.com/urfave/cli/v2"
 )
 
 // Twitter base struct.
