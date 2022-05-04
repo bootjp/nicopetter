@@ -6,9 +6,9 @@ WORKDIR $GOPATH/src/github.com/bootjp/go_twitter_bot_for_nicopedia
 
 COPY . .
 
-RUN GOOS=linux GOARCH=arm64 CGO_ENABLED=0 go build -a -o out main/main.go && cp out /app
+RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -a -o out main/main.go && cp out /app
 
-FROM gcr.io/distroless/static:latest-arm64
+FROM gcr.io/distroless/static
 
 COPY --from=build /app /app
 
