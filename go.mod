@@ -9,12 +9,11 @@ require (
 	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/mmcdole/gofeed v1.1.3
 	github.com/pkg/errors v0.9.1
-	github.com/urfave/cli/v2 v2.8.0
+	github.com/urfave/cli/v2 v2.8.1
 )
 
 require (
 	github.com/andybalholm/cascadia v1.3.1 // indirect
-	github.com/antzucaro/matchr v0.0.0-20210222213004-b04723ef80f0 // indirect
 	github.com/cenkalti/backoff/v4 v4.1.3 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.1 // indirect
 	github.com/dghubble/sling v1.4.0 // indirect
@@ -27,6 +26,7 @@ require (
 	github.com/onsi/ginkgo v1.16.4 // indirect
 	github.com/onsi/gomega v1.16.0 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
+	github.com/xrash/smetrics v0.0.0-20201216005158-039620a65673 // indirect
 	golang.org/x/net v0.0.0-20210916014120-12bc252f5db8 // indirect
 	golang.org/x/text v0.3.7 // indirect
 )
