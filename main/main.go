@@ -182,7 +182,7 @@ func routine(mode *bot.Behavior) error {
 	if err != nil {
 		return err
 	}
-	r := store.NewRedisClient(os.Getenv("REDIS_HOST"), i, mode.StorePrefix)
+	r := store.NewRedisClient(os.Getenv("REDIS_HOST"), i, mode.StorePrefix, os.Getenv("REDIS_PASSWORD"))
 	defer func() {
 		_ = r.Close()
 	}()

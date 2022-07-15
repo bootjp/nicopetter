@@ -26,12 +26,13 @@ type RedisI interface {
 }
 
 // NewRedisClient is a new store connect instance  operation for bot.
-func NewRedisClient(host string, index int, prefix string) *Redis {
+func NewRedisClient(host string, index int, prefix string, password string) *Redis {
 	r := &Redis{}
 	r.p = prefix
 	r.c = redis.NewClient(&redis.Options{
-		Addr: host + ":6379",
-		DB:   index,
+		Addr:     host,
+		DB:       index,
+		Password: password,
 	})
 
 	return r
