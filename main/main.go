@@ -318,15 +318,15 @@ func main() {
 	app.Action = func(c *cli.Context) error {
 		mode, err := bot.NewBehavior(c.String("mode"))
 		if err != nil {
-			// 5xx エラーはこっちでどうにもできないので無視する
-			if err == ErrServer {
-				return nil
-			}
 			return err
 		}
 		return routine(mode)
 	}
 	if err := app.Run(os.Args); err != nil {
+		// 5xx エラーはこっちでどうにもできないので無視する
+		if err == ErrServer {
+			return
+		}
 		log.Fatal(err)
 	}
 }
