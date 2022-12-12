@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/urfave/cli"
 	"os"
 	"strconv"
 
@@ -27,7 +28,6 @@ import (
 	"github.com/dghubble/oauth1"
 	"github.com/mmcdole/gofeed"
 	"github.com/pkg/errors"
-	"github.com/urfave/cli/v2"
 )
 
 // Twitter base struct.
@@ -84,10 +84,12 @@ func (t *Twitter) PostTwitter(i *gofeed.Item, meta nicopedia.MetaData, mode *bot
 	return nil
 }
 
+var ErrServer = errors.New("ignore")
+
 // FetchArticleMeta is Nicopedia user redirect setting article redirect page title.
 func FetchArticleMeta(u *url.URL) (nicopedia.MetaData, error) {
 	const TitleSuffix = `location.replace('https://dic.nicovideo.jp/a/`
-	c := http.Client{Timeout: time.Duration(15 * time.Second)}
+	c := http.Client{Timeout: 15 * time.Second}
 	res, err := c.Get(u.String())
 	if err != nil {
 		log.Println(u.String())
@@ -102,10 +104,13 @@ func FetchArticleMeta(u *url.URL) (nicopedia.MetaData, error) {
 	}()
 
 	switch res.Status[:1] {
-	case "4", "5":
+	case "4":
 		return nicopedia.MetaData{}, fmt.Errorf("got %s status code", res.Status)
+	case "5":
+		log.Println("got 5xx status code ignore")
+		return nicopedia.MetaData{}, ErrServer
 	case "3":
-		log.Println("warn got 30x statsu code")
+		log.Println("warn got 30x status code")
 	}
 
 	doc, err := goquery.NewDocumentFromReader(res.Body)
@@ -313,6 +318,10 @@ func main() {
 	app.Action = func(c *cli.Context) error {
 		mode, err := bot.NewBehavior(c.String("mode"))
 		if err != nil {
+			// 5xx エラーはこっちでどうにもできないので無視する
+			if err == ErrServer {
+				return nil
+			}
 			return err
 		}
 		return routine(mode)
