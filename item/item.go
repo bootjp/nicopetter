@@ -61,7 +61,7 @@ func Fetch(URL string) ([]*gofeed.Item, error) {
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
-	c := http.Client{Transport: tr, Timeout: time.Duration(15 * time.Second)}
+	c := http.Client{Transport: tr, Timeout: 15 * time.Second}
 
 	res, err := c.Get(URL)
 	if err != nil {

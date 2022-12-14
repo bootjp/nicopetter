@@ -80,7 +80,7 @@ func (c *Redis) URLPosted(u string, exp int) (bool, error) {
 
 // MarkedAsPosted is url is tweeted mark.
 func (c *Redis) MarkedAsPosted(u string) error {
-	res, err := c.c.Set(c.p+u, "", time.Duration(24*time.Hour*7)).Result()
+	res, err := c.c.Set(c.p+u, "", 24*time.Hour*7).Result()
 	if err != nil {
 		return err
 	}
