@@ -3,7 +3,7 @@ module github.com/bootjp/go_twitter_bot_for_nicopedia
 go 1.19
 
 require (
-	github.com/PuerkitoBio/goquery v1.8.0
+	github.com/PuerkitoBio/goquery v1.8.1
 	github.com/dghubble/go-twitter v0.0.0-20221104224141-912508c3888b
 	github.com/dghubble/oauth1 v0.7.2
 	github.com/go-redis/redis v6.15.9+incompatible
