@@ -7,7 +7,7 @@ require (
 	github.com/dghubble/go-twitter v0.0.0-20221104224141-912508c3888b
 	github.com/dghubble/oauth1 v0.7.2
 	github.com/go-redis/redis v6.15.9+incompatible
-	github.com/mmcdole/gofeed v1.2.0
+	github.com/mmcdole/gofeed v1.2.1
 	github.com/pkg/errors v0.9.1
 	github.com/urfave/cli v1.22.12
 )
@@ -20,7 +20,7 @@ require (
 	github.com/google/go-cmp v0.5.6 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
-	github.com/mmcdole/goxpp v0.0.0-20200921145534-2f3784f67354 // indirect
+	github.com/mmcdole/goxpp v1.1.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/onsi/ginkgo v1.16.5 // indirect
