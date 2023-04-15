@@ -40,13 +40,13 @@ type Twitter struct {
 	mytwitter.Authorization
 }
 
-// SendSNS is testable interface.
-type SendSNS interface {
-	PostTwitter(i *gofeed.Item, rd *nicopedia.MetaData, mode *bot.Behavior) error
+// SNS is testable interface.
+type SNS interface {
+	Post(i *gofeed.Item, rd *nicopedia.MetaData, mode *bot.Behavior) error
 }
 
-// PostTwitter is Item to Twitter post.
-func (t *Twitter) PostTwitter(i *gofeed.Item, meta nicopedia.MetaData, mode *bot.Behavior) error {
+// Post is Item to Twitter post.
+func (t *Twitter) Post(i *gofeed.Item, meta nicopedia.MetaData, mode *bot.Behavior) error {
 	config := oauth1.NewConfig(t.Authorization.ConsumerKey, t.Authorization.ConsumerSecret)
 	token := oauth1.NewToken(t.Authorization.AccessToken, t.Authorization.AccessTokenSecret)
 	httpClient := config.Client(oauth1.NoContext, token)
@@ -201,7 +201,7 @@ func FetchArticleMeta(u *url.URL) (nicopedia.MetaData, error) {
 	return meta, nil
 }
 
-func routine(mode *bot.Behavior) error {
+func run(mode *bot.Behavior) error {
 	f, err := item.Fetch(mode.FeedURL)
 	if err != nil {
 		return err
@@ -285,7 +285,7 @@ func routine(mode *bot.Behavior) error {
 			return err
 		}
 
-		err = sns.PostTwitter(v, meta, mode)
+		err = sns.Post(v, meta, mode)
 
 		if mode == bot.NicopetterNewRedirectArticle || mode == bot.NicopetterNewArticle || mode == bot.NicopetterModifyRedirectArticle {
 
@@ -344,7 +344,7 @@ func main() {
 		if err != nil {
 			return err
 		}
-		return routine(mode)
+		return run(mode)
 	}
 	if err := app.Run(os.Args); err != nil {
 		// 5xx エラーはこっちでどうにもできないので無視する

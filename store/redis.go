@@ -16,8 +16,8 @@ type Redis struct {
 	p string
 }
 
-// RedisI is a convenient interface of Redis operation for bot.
-type RedisI interface {
+// Store is a convenient interface of Redis operation for bot.
+type Store interface {
 	GetLastUpdateTime() (time.Time, error)
 	SetLastUpdateTime(t time.Time) error
 	Close() error

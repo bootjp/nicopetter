@@ -43,7 +43,7 @@ var (
 		"nicopetter_new:",
 	}
 
-	// NicopetterRedirectArticle is Nicopedia general article is to redirect tweet account.
+	// NicopetterNewRedirectArticle is Nicopedia general article is to redirect tweet account.
 	NicopetterNewRedirectArticle = &Behavior{
 		"%s から %s へのリダイレクトができたよ。 %s",
 		"https://dic.nicovideo.jp/feed/rss/n/a",
