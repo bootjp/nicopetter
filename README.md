@@ -1,4 +1,4 @@
-# go_twitter_bot
+# nicopetter (nicopedia twitter bot)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fbootjp%2Fgo_twitter_bot_for_nicopedia.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fbootjp%2Fgo_twitter_bot_for_nicopedia?ref=badge_shield)
 
 
