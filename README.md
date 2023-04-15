@@ -3,23 +3,17 @@
 
 
 ## how to use 
-
-dependence Redis is require.
+Redis is require.
 
 ```bash
-cd $GOPATH/src/ 
-mkdir -p github.com/bootjp
-cd github.com/bootjp
 git clone git@github.com:bootjp/go_twitter_bot_for_nicopedia.git
 cd go_twitter_bot_for_nicopedia
-go get -u github.com/golang/dep/...
-dep ensure
+go mod download
 GOOS=linux CGO_ENABLED=0 go build -a -o out main/main.go
-REDIS_HOST='localhost' REDIS_INDEX=0 CONSUMER_SECRET='c_sec_here' CONSUMER_KEY='c_key_here' ACCESS_TOKEN='token_here' ACCESS_TOKEN_SECRET='token_secret_here' ./out 
+REDIS_HOST='localhost' REDIS_INDEX=0 CONSUMER_SECRET='c_sec_here' CONSUMER_KEY='c_key_here' ACCESS_TOKEN='token_here' ACCESS_TOKEN_SECRET='token_secret_here' MISSKEY_TOKEN='missket_token_here' ./out 
 ```
 
-[docker images](https://hub.docker.com/r/bootjp/go_twitter_bot_for_nicopedia/) 
-
+[docker images](https://github.com/bootjp/go_twitter_bot_for_nicopedia/pkgs/container/go_twitter_bot_for_nicopedia) 
 
 
 ## License
