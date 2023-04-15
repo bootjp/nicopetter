@@ -1,7 +1,12 @@
 package main
 
 import (
+	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
+	"github.com/yitsushi/go-misskey"
+	"github.com/yitsushi/go-misskey/core"
+	"github.com/yitsushi/go-misskey/models"
+	"github.com/yitsushi/go-misskey/services/notes"
 	"os"
 	"strconv"
 
@@ -45,7 +50,7 @@ func (t *Twitter) PostTwitter(i *gofeed.Item, meta nicopedia.MetaData, mode *bot
 	config := oauth1.NewConfig(t.Authorization.ConsumerKey, t.Authorization.ConsumerSecret)
 	token := oauth1.NewToken(t.Authorization.AccessToken, t.Authorization.AccessTokenSecret)
 	httpClient := config.Client(oauth1.NoContext, token)
-	httpClient.Timeout = time.Duration(10 * time.Second)
+	httpClient.Timeout = 10 * time.Second
 	client := twitter.NewClient(httpClient)
 
 	u, err := url.Parse(i.Link)
@@ -72,11 +77,27 @@ func (t *Twitter) PostTwitter(i *gofeed.Item, meta nicopedia.MetaData, mode *bot
 	}
 
 	tweet, resp, err := client.Statuses.Update(out, nil)
-
 	if err != nil {
 
 		fmt.Printf("%v\n", tweet)
 		fmt.Printf("%v\n", resp)
+		println(out)
+		return err
+	}
+
+	mClient, err := misskey.NewClientWithOptions(misskey.WithSimpleConfig("https://misskey.bootjp.me", os.Getenv("MISSKEY_TOKEN")))
+	if err != nil {
+		return err
+	}
+	mClient.LogLevel(logrus.DebugLevel)
+
+	response, err := mClient.Notes().Create(notes.CreateRequest{
+		Text:       core.NewString(out),
+		Visibility: models.VisibilityPublic,
+	})
+
+	if err != nil {
+		fmt.Printf("%v\n", response)
 		println(out)
 		return err
 	}
