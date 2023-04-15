@@ -84,7 +84,7 @@ func (t *Twitter) PostTwitter(i *gofeed.Item, meta nicopedia.MetaData, mode *bot
 	mClient.LogLevel(logrus.DebugLevel)
 	response, err := mClient.Notes().Create(notes.CreateRequest{
 		Text:       core.NewString(out),
-		Visibility: models.VisibilityPublic,
+		Visibility: models.VisibilityHome,
 	})
 
 	if err != nil {
