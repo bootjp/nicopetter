@@ -14,3 +14,9 @@ REDIS_HOST='localhost' REDIS_INDEX=0 CONSUMER_SECRET='c_sec_here' CONSUMER_KEY='
 ```
 
 [docker images](https://github.com/bootjp/go_twitter_bot_for_nicopedia/pkgs/container/go_twitter_bot_for_nicopedia) 
+
+
+## on sns account
+
+- https://twitter.com/nicopetter
+- https://misskey.bootjp.me/@nicopetter
