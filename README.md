@@ -14,7 +14,3 @@ REDIS_HOST='localhost' REDIS_INDEX=0 CONSUMER_SECRET='c_sec_here' CONSUMER_KEY='
 ```
 
 [docker images](https://github.com/bootjp/go_twitter_bot_for_nicopedia/pkgs/container/go_twitter_bot_for_nicopedia) 
-
-
-## License
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fbootjp%2Fgo_twitter_bot_for_nicopedia.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fbootjp%2Fgo_twitter_bot_for_nicopedia?ref=badge_large)
