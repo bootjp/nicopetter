@@ -209,11 +209,11 @@ func run(mode *bot.Behavior) error {
 			if err != nil && err.Error() == "json: cannot unmarshal object into Go struct field User.createdNote.user.emojis of type []models.Emoji" {
 				err = nil
 			}
+			if err != nil && err.Error() == "twitter: 187 Status is a duplicate." {
+				err = nil
+			}
+
 			if err != nil {
-				if err != nil && err.Error() == "twitter: 187 Status is a duplicate." {
-					log.Print(err)
-					continue
-				}
 				log.Println(err)
 				return err
 			}
@@ -222,7 +222,6 @@ func run(mode *bot.Behavior) error {
 				return err
 			}
 		}
-
 	}
 
 	return nil
