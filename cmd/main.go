@@ -212,7 +212,7 @@ func run(mode *bot.Behavior) error {
 					continue
 				}
 				if err != nil && err.Error() == "json: cannot unmarshal object into Go struct field User.createdNote.user.emojis of type []models.Emoji" {
-					return err
+					continue
 				}
 				log.Println(err)
 				return err
