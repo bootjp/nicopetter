@@ -206,12 +206,12 @@ func run(mode *bot.Behavior) error {
 
 			err = s.Post(post)
 
+			if err != nil && err.Error() == "json: cannot unmarshal object into Go struct field User.createdNote.user.emojis of type []models.Emoji" {
+				err = nil
+			}
 			if err != nil {
 				if err != nil && err.Error() == "twitter: 187 Status is a duplicate." {
 					log.Print(err)
-					continue
-				}
-				if err != nil && err.Error() == "json: cannot unmarshal object into Go struct field User.createdNote.user.emojis of type []models.Emoji" {
 					continue
 				}
 				log.Println(err)
