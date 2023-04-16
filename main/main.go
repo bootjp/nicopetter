@@ -76,12 +76,14 @@ func (t *Twitter) Post(i *gofeed.Item, meta nicopedia.MetaData, mode *bot.Behavi
 		out = fmt.Sprintf(mode.TweetFormat, i.Title, meta.FromTitle, i.Link)
 	}
 
+	var errs []error
+
 	mClient, err := misskey.NewClientWithOptions(misskey.WithSimpleConfig("https://misskey.bootjp.me", os.Getenv("MISSKEY_TOKEN")))
 	if err != nil {
 		return err
 	}
 
-	mClient.LogLevel(logrus.DebugLevel)
+	mClient.LogLevel(logrus.ErrorLevel)
 	response, err := mClient.Notes().Create(notes.CreateRequest{
 		Text:              core.NewString(out),
 		Visibility:        models.VisibilityPublic,
@@ -91,17 +93,23 @@ func (t *Twitter) Post(i *gofeed.Item, meta nicopedia.MetaData, mode *bot.Behavi
 	})
 
 	if err != nil {
+		errs = append(errs, err)
 		fmt.Printf("%v\n", response)
-		println(out)
-		return err
 	}
 
 	tweet, resp, err := client.Statuses.Update(out, nil)
 	if err != nil {
-
+		errs = append(errs, err)
 		fmt.Printf("%v\n", tweet)
 		fmt.Printf("%v\n", resp)
-		println(out)
+	}
+
+	if len(errs) != 0 {
+		var err error
+		for _, e := range errs {
+			err = errors.Wrap(e, e.Error())
+		}
+
 		return err
 	}
 
