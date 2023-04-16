@@ -1,6 +1,7 @@
 package store
 
 import (
+	"github.com/bootjp/go_twitter_bot_for_nicopedia/sns"
 	"time"
 
 	"errors"
@@ -16,13 +17,11 @@ type Redis struct {
 	p string
 }
 
-// RedisI is a convenient interface of Redis operation for bot.
-type RedisI interface {
-	GetLastUpdateTime() (time.Time, error)
-	SetLastUpdateTime(t time.Time) error
+// Store is a convenient interface of Redis operation for bot.
+type Store interface {
 	Close() error
-	URLPosted(u string, exp int) (bool, error)
-	MarkedAsPosted(u string) error
+	URLPosted(u string, s sns.SNS) (bool, error)
+	MarkedAsPosted(u string, s sns.SNS) error
 }
 
 // NewRedisClient is a new store connect instance  operation for bot.
@@ -38,39 +37,14 @@ func NewRedisClient(host string, index int, prefix string, password string) *Red
 	return r
 }
 
-// GetLastUpdateTime は最後にいつRSSの更新があったかを返す関数です.
-func (c *Redis) GetLastUpdateTime() (time.Time, error) {
-	res, err := c.c.Get(c.p + "lastDate").Result()
-	if err != nil {
-		return time.Now(), err
-	}
-
-	loc, err := time.LoadLocation("Asia/Tokyo")
-	if err != nil {
-		return time.Now(), err
-	}
-
-	return time.ParseInLocation(dateFormat, res, loc)
-}
-
 // Close is Redis connection close.
 func (c *Redis) Close() error {
 	return c.c.Close()
 }
 
-// SetLastUpdateTime set rss last update time.
-func (c *Redis) SetLastUpdateTime(t time.Time) error {
-	res := c.c.Set(c.p+"lastDate", t.Format(dateFormat), time.Duration(-1))
-	if _, err := res.Result(); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 // URLPosted is check url tweeted.
-func (c *Redis) URLPosted(u string, exp int) (bool, error) {
-	res, err := c.c.Exists(c.p + u).Result()
+func (c *Redis) URLPosted(u string, s sns.SNS) (bool, error) {
+	res, err := c.c.Exists(c.p + s.String() + u).Result()
 	if err != nil {
 		return false, err
 	}
@@ -79,8 +53,8 @@ func (c *Redis) URLPosted(u string, exp int) (bool, error) {
 }
 
 // MarkedAsPosted is url is tweeted mark.
-func (c *Redis) MarkedAsPosted(u string) error {
-	res, err := c.c.Set(c.p+u, "", 24*time.Hour*7).Result()
+func (c *Redis) MarkedAsPosted(u string, s sns.SNS) error {
+	res, err := c.c.Set(c.p+s.String()+u, "", 24*time.Hour*7).Result()
 	if err != nil {
 		return err
 	}

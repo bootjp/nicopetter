@@ -2,19 +2,16 @@ package item
 
 import (
 	"crypto/tls"
+	"io"
 	"time"
 
 	"net/http"
 
 	"log"
 
-	"io/ioutil"
-
 	"strings"
 	"unicode"
 
-	"github.com/bootjp/go_twitter_bot_for_nicopedia/domain/bot"
-	"github.com/bootjp/go_twitter_bot_for_nicopedia/store"
 	"github.com/mmcdole/gofeed"
 )
 
@@ -28,32 +25,6 @@ func FilterDate(f []*gofeed.Item, t time.Time) []*gofeed.Item {
 	}
 
 	return itm
-}
-
-// FilterMarkedAsPost no redis mark as post return item.
-func FilterMarkedAsPost(f []*gofeed.Item, r *store.Redis, mode *bot.Behavior) ([]*gofeed.Item, error) {
-	var itm []*gofeed.Item
-	for _, elem := range f {
-		var ng bool
-		var err error
-		switch mode {
-		case bot.NicopetterNewArticle:
-			ng, err = r.URLPosted(elem.Link, -1)
-		case bot.NicopetterModifyRedirectArticle:
-			ng, err = r.URLPosted(elem.Link, 86400)
-		case bot.NicopetterNewRedirectArticle:
-			ng, err = r.URLPosted(elem.Link, 86400)
-		}
-
-		if err != nil {
-			return nil, err
-		}
-		if !ng {
-			itm = append(itm, elem)
-		}
-	}
-
-	return itm, nil
 }
 
 // Fetch is got url to fetch and return rss.
@@ -75,11 +46,12 @@ func Fetch(URL string) ([]*gofeed.Item, error) {
 		}
 	}()
 
-	body, err := ioutil.ReadAll(res.Body)
+	body, err := io.ReadAll(res.Body)
 	if err != nil {
 		return nil, err
 	}
 
+	// skip no print char
 	printOnly := func(r rune) rune {
 		if unicode.IsPrint(r) {
 			return r

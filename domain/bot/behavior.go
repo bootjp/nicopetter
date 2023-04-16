@@ -1,6 +1,10 @@
 package bot
 
 import (
+	"fmt"
+	"github.com/bootjp/go_twitter_bot_for_nicopedia/domain/nicopedia"
+	"github.com/mmcdole/gofeed"
+	"net/url"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -43,7 +47,7 @@ var (
 		"nicopetter_new:",
 	}
 
-	// NicopetterRedirectArticle is Nicopedia general article is to redirect tweet account.
+	// NicopetterNewRedirectArticle is Nicopedia general article is to redirect tweet account.
 	NicopetterNewRedirectArticle = &Behavior{
 		"%s から %s へのリダイレクトができたよ。 %s",
 		"https://dic.nicovideo.jp/feed/rss/n/a",
@@ -75,5 +79,28 @@ func NewBehavior(mode string) (*Behavior, error) {
 		return NicopetterModifyRedirectArticle, nil
 	default:
 		return nil, errors.New("mode is invalid string")
+	}
+}
+
+func FormatPost(mode *Behavior, meta nicopedia.MetaData, i *gofeed.Item) (string, error) {
+	var u, err = url.Parse(i.Link)
+	if err != nil {
+		return "", err
+	}
+	ar := nicopedia.ParseArticleType(u)
+
+	switch mode {
+	case Gunyapetter:
+		return fmt.Sprintf(mode.TweetFormat, i.Title, ar.PostArticleExpression, i.Description, i.Link), nil
+	case DulltterTmp:
+		return fmt.Sprintf(mode.TweetFormat, i.Title, ar.PostArticleExpression, i.Description, i.Link), nil
+	case NicopetterNewArticle:
+		return fmt.Sprintf(mode.TweetFormat, i.Title, i.Link), nil
+	case NicopetterNewRedirectArticle:
+		return fmt.Sprintf(mode.TweetFormat, i.Title, meta.FromTitle, i.Link), nil
+	case NicopetterModifyRedirectArticle:
+		return fmt.Sprintf(mode.TweetFormat, i.Title, meta.FromTitle, i.Link), nil
+	default:
+		return "", errors.New("mode is invalid string")
 	}
 }
