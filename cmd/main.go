@@ -1,12 +1,8 @@
 package main
 
 import (
-	"github.com/sirupsen/logrus"
+	"github.com/bootjp/go_twitter_bot_for_nicopedia/sns"
 	"github.com/urfave/cli"
-	"github.com/yitsushi/go-misskey"
-	"github.com/yitsushi/go-misskey/core"
-	"github.com/yitsushi/go-misskey/models"
-	"github.com/yitsushi/go-misskey/services/notes"
 	"os"
 	"strconv"
 
@@ -29,92 +25,9 @@ import (
 	mytwitter "github.com/bootjp/go_twitter_bot_for_nicopedia/domain/twitter"
 	"github.com/bootjp/go_twitter_bot_for_nicopedia/item"
 	"github.com/bootjp/go_twitter_bot_for_nicopedia/store"
-	"github.com/dghubble/go-twitter/twitter"
-	"github.com/dghubble/oauth1"
 	"github.com/mmcdole/gofeed"
 	"github.com/pkg/errors"
 )
-
-// Twitter base struct.
-type Twitter struct {
-	mytwitter.Authorization
-}
-
-// SNS is testable interface.
-type SNS interface {
-	Post(i *gofeed.Item, rd *nicopedia.MetaData, mode *bot.Behavior) error
-}
-
-// Post is Item to Twitter post.
-func (t *Twitter) Post(i *gofeed.Item, meta nicopedia.MetaData, mode *bot.Behavior) error {
-	config := oauth1.NewConfig(t.Authorization.ConsumerKey, t.Authorization.ConsumerSecret)
-	token := oauth1.NewToken(t.Authorization.AccessToken, t.Authorization.AccessTokenSecret)
-	httpClient := config.Client(oauth1.NoContext, token)
-	httpClient.Timeout = 10 * time.Second
-	client := twitter.NewClient(httpClient)
-
-	u, err := url.Parse(i.Link)
-	if err != nil {
-		return err
-	}
-	ar := nicopedia.ParseArticleType(u)
-
-	var out string
-	switch mode {
-	case bot.Gunyapetter:
-		out = fmt.Sprintf(mode.TweetFormat, i.Title, ar.PostArticleExpression, i.Description, i.Link)
-
-	case bot.DulltterTmp:
-		out = fmt.Sprintf(mode.TweetFormat, i.Title, ar.PostArticleExpression, i.Description, i.Link)
-
-	case bot.NicopetterNewArticle:
-		out = fmt.Sprintf(mode.TweetFormat, i.Title, i.Link)
-
-	case bot.NicopetterNewRedirectArticle:
-		out = fmt.Sprintf(mode.TweetFormat, i.Title, meta.FromTitle, i.Link)
-	case bot.NicopetterModifyRedirectArticle:
-		out = fmt.Sprintf(mode.TweetFormat, i.Title, meta.FromTitle, i.Link)
-	}
-
-	var errs []error
-
-	mClient, err := misskey.NewClientWithOptions(misskey.WithSimpleConfig("https://misskey.bootjp.me", os.Getenv("MISSKEY_TOKEN")))
-	if err != nil {
-		return err
-	}
-
-	mClient.LogLevel(logrus.ErrorLevel)
-	response, err := mClient.Notes().Create(notes.CreateRequest{
-		Text:              core.NewString(out),
-		Visibility:        models.VisibilityPublic,
-		NoExtractEmojis:   true,
-		NoExtractHashtags: true,
-		NoExtractMentions: true,
-	})
-
-	if err != nil {
-		errs = append(errs, err)
-		fmt.Printf("%v\n", response)
-	}
-
-	tweet, resp, err := client.Statuses.Update(out, nil)
-	if err != nil {
-		errs = append(errs, err)
-		fmt.Printf("%v\n", tweet)
-		fmt.Printf("%v\n", resp)
-	}
-
-	if len(errs) != 0 {
-		var err error
-		for _, e := range errs {
-			err = errors.Wrap(e, e.Error())
-		}
-
-		return err
-	}
-
-	return nil
-}
 
 var ErrServer = errors.New("ignore")
 
@@ -224,21 +137,6 @@ func run(mode *bot.Behavior) error {
 		_ = r.Close()
 	}()
 
-	t, err := r.GetLastUpdateTime()
-	if err != nil {
-		return err
-	}
-
-	switch mode {
-	case bot.Gunyapetter, bot.DulltterTmp:
-		f = item.FilterDate(f, t)
-	case bot.NicopetterModifyRedirectArticle, bot.NicopetterNewArticle, bot.NicopetterNewRedirectArticle:
-		f, err = item.FilterMarkedAsPost(f, r, mode)
-		if err != nil {
-			return err
-		}
-	}
-
 	if len(f) == 0 {
 		return nil
 	}
@@ -248,9 +146,21 @@ func run(mode *bot.Behavior) error {
 		return f[i].PublishedParsed.Before(*f[j].PublishedParsed)
 	})
 
-	sns := Twitter{createTwitterAuth()}
+	var snsList []sns.SNS
+	m, err := sns.NewMisskey(os.Getenv("MISSKEY_TOKEN"))
+	if err != nil {
+		return err
+	}
 
-	lastPublish := t
+	snsList = append(snsList, m)
+
+	sn, err := sns.NewTwitter(createTwitterAuth())
+	if err != nil {
+		return err
+	}
+
+	snsList = append(snsList, sn)
+
 	for _, v := range f {
 		meta := nicopedia.MetaData{IsRedirect: false}
 		switch mode {
@@ -279,41 +189,36 @@ func run(mode *bot.Behavior) error {
 			}
 		}
 
-		switch mode {
-		case bot.Gunyapetter, bot.DulltterTmp:
-			if err = r.SetLastUpdateTime(*v.PublishedParsed); err != nil {
-				return err
-			}
-		case bot.NicopetterNewRedirectArticle, bot.NicopetterNewArticle, bot.NicopetterModifyRedirectArticle:
-			if err = r.MarkedAsPosted(v.Link); err != nil {
-				return err
-			}
-		}
+		post, err := bot.FormatPost(mode, meta, v)
 		if err != nil {
 			return err
 		}
 
-		err = sns.Post(v, meta, mode)
+		for _, s := range snsList {
+			already, err := r.URLPosted(v.Link, s)
+			if err != nil {
+				return err
+			}
 
-		if mode == bot.NicopetterNewRedirectArticle || mode == bot.NicopetterNewArticle || mode == bot.NicopetterModifyRedirectArticle {
-
-			switch {
-			// RSSがソートされていない関係上，すべてのRSSを見るようにする配慮
-			case err != nil && err.Error() == "twitter: 187 Status is a duplicate.":
-				log.Print(err)
+			if already {
 				continue
-			case err != nil:
+			}
+
+			err = s.Post(post)
+
+			if err != nil {
+				if err != nil && err.Error() == "twitter: 187 Status is a duplicate." {
+					log.Print(err)
+					continue
+				}
 				return err
 			}
-		}
-		if err != nil {
-			if err = r.SetLastUpdateTime(lastPublish); err != nil {
+
+			if err = r.MarkedAsPosted(v.Link, s); err != nil {
 				return err
 			}
-			return err
 		}
 
-		lastPublish = *v.PublishedParsed
 	}
 
 	return nil
@@ -335,7 +240,6 @@ func extractRedirect(f *gofeed.Item) (nicopedia.MetaData, error) {
 	}
 
 	return FetchArticleMeta(u)
-
 }
 
 func main() {
