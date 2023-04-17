@@ -25,7 +25,7 @@ func NewMisskey(token string) (*Misskey, error) {
 func (m *Misskey) Post(post string) error {
 	_, err := m.client.Notes().Create(notes.CreateRequest{
 		Text:              core.NewString(post),
-		Visibility:        models.VisibilityPublic,
+		Visibility:        models.VisibilityHome,
 		NoExtractEmojis:   true,
 		NoExtractHashtags: true,
 		NoExtractMentions: true,
