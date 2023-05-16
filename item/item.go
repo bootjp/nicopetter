@@ -58,10 +58,9 @@ func Fetch(URL string) ([]*gofeed.Item, error) {
 		}
 		return -1
 	}
-	body = []byte(strings.Map(printOnly, string(body)))
 
 	p := gofeed.NewParser()
-	f, err := p.ParseString(string(body[:]))
+	f, err := p.ParseString(strings.Map(printOnly, string(body)))
 	if err != nil {
 		log.Println(URL)
 		return nil, err
