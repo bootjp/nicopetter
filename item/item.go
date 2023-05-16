@@ -4,6 +4,7 @@ import (
 	"crypto/tls"
 	"io"
 	"time"
+	"unicode/utf8"
 
 	"net/http"
 
@@ -53,10 +54,13 @@ func Fetch(URL string) ([]*gofeed.Item, error) {
 
 	// skip no print char
 	printOnly := func(r rune) rune {
-		if unicode.IsPrint(r) {
-			return r
+		if !unicode.IsPrint(r) {
+			return -1
 		}
-		return -1
+		if !utf8.ValidRune(r) {
+			return -1
+		}
+		return r
 	}
 
 	p := gofeed.NewParser()
