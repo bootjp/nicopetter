@@ -154,13 +154,6 @@ func run(mode *bot.Behavior) error {
 
 	snsList = append(snsList, m)
 
-	sn, err := sns.NewTwitter(createTwitterAuth())
-	if err != nil {
-		return err
-	}
-
-	snsList = append(snsList, sn)
-
 	for _, v := range f {
 		meta := nicopedia.MetaData{IsRedirect: false}
 		switch mode {
@@ -194,33 +187,28 @@ func run(mode *bot.Behavior) error {
 			return err
 		}
 
-		for _, s := range snsList {
-			already, err := r.URLPosted(v.Link, s)
-			if err != nil {
-				return err
-			}
+		already, err := r.URLPosted(v.Link, m)
+		if err != nil {
+			return err
+		}
 
-			if already {
-				continue
-			}
+		if already {
+			continue
+		}
 
-			err = s.Post(post)
+		err = m.Post(post)
 
-			if err != nil && err.Error() == "json: cannot unmarshal object into Go struct field User.createdNote.user.emojis of type []models.Emoji" {
-				err = nil
-			}
-			if err != nil && err.Error() == "twitter: 187 Status is a duplicate." {
-				err = nil
-			}
+		if err != nil && err.Error() == "json: cannot unmarshal object into Go struct field User.createdNote.user.emojis of type []models.Emoji" {
+			err = nil
+		}
 
-			if err != nil {
-				log.Println(err)
-				return err
-			}
+		if err != nil {
+			log.Println(err)
+			return err
+		}
 
-			if err = r.MarkedAsPosted(v.Link, s); err != nil {
-				return err
-			}
+		if err = r.MarkedAsPosted(v.Link, m); err != nil {
+			return err
 		}
 	}
 
