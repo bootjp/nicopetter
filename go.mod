@@ -4,8 +4,6 @@ go 1.19
 
 require (
 	github.com/PuerkitoBio/goquery v1.8.1
-	github.com/dghubble/go-twitter v0.0.0-20221104224141-912508c3888b
-	github.com/dghubble/oauth1 v0.7.2
 	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/mmcdole/gofeed v1.2.1
 	github.com/pkg/errors v0.9.1
@@ -16,11 +14,7 @@ require (
 
 require (
 	github.com/andybalholm/cascadia v1.3.1 // indirect
-	github.com/cenkalti/backoff/v4 v4.2.0 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.2 // indirect
-	github.com/dghubble/sling v1.4.1 // indirect
-	github.com/google/go-cmp v0.5.6 // indirect
-	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/mmcdole/goxpp v1.1.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect

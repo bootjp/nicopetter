@@ -22,7 +22,6 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	"github.com/bootjp/go_twitter_bot_for_nicopedia/domain/bot"
 	"github.com/bootjp/go_twitter_bot_for_nicopedia/domain/nicopedia"
-	mytwitter "github.com/bootjp/go_twitter_bot_for_nicopedia/domain/twitter"
 	"github.com/bootjp/go_twitter_bot_for_nicopedia/item"
 	"github.com/bootjp/go_twitter_bot_for_nicopedia/store"
 	"github.com/mmcdole/gofeed"
@@ -146,13 +145,10 @@ func run(mode *bot.Behavior) error {
 		return f[i].PublishedParsed.Before(*f[j].PublishedParsed)
 	})
 
-	var snsList []sns.SNS
 	m, err := sns.NewMisskey(os.Getenv("MISSKEY_TOKEN"))
 	if err != nil {
 		return err
 	}
-
-	snsList = append(snsList, m)
 
 	for _, v := range f {
 		meta := nicopedia.MetaData{IsRedirect: false}
@@ -213,15 +209,6 @@ func run(mode *bot.Behavior) error {
 	}
 
 	return nil
-}
-
-func createTwitterAuth() mytwitter.Authorization {
-	return mytwitter.Authorization{
-		AccessToken:       os.Getenv("ACCESS_TOKEN"),
-		AccessTokenSecret: os.Getenv("ACCESS_TOKEN_SECRET"),
-		ConsumerKey:       os.Getenv("CONSUMER_KEY"),
-		ConsumerSecret:    os.Getenv("CONSUMER_SECRET"),
-	}
 }
 
 func extractRedirect(f *gofeed.Item) (nicopedia.MetaData, error) {
