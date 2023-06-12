@@ -8,7 +8,7 @@ require (
 	github.com/mmcdole/gofeed v1.2.1
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.9.3
-	github.com/urfave/cli v1.22.13
+	github.com/urfave/cli v1.22.14
 	github.com/yitsushi/go-misskey v1.1.2
 )
 
