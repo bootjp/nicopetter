@@ -1,8 +1,6 @@
 package main
 
 import (
-	"github.com/bootjp/go_twitter_bot_for_nicopedia/sns"
-	"github.com/urfave/cli"
 	"os"
 	"strconv"
 
@@ -17,15 +15,16 @@ import (
 	"net/http"
 	"time"
 
-	"strings"
-
 	"github.com/PuerkitoBio/goquery"
 	"github.com/bootjp/go_twitter_bot_for_nicopedia/domain/bot"
 	"github.com/bootjp/go_twitter_bot_for_nicopedia/domain/nicopedia"
 	"github.com/bootjp/go_twitter_bot_for_nicopedia/item"
+	"github.com/bootjp/go_twitter_bot_for_nicopedia/sns"
 	"github.com/bootjp/go_twitter_bot_for_nicopedia/store"
 	"github.com/mmcdole/gofeed"
 	"github.com/pkg/errors"
+	"github.com/urfave/cli/v2"
+	"strings"
 )
 
 var ErrServer = errors.New("ignore")
