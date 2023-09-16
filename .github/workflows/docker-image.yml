@@ -17,7 +17,7 @@ jobs:
         run: docker build -t ghcr.io/bootjp/go_twitter_bot_for_nicopedia:amd64 .
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
