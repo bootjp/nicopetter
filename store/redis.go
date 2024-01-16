@@ -1,15 +1,12 @@
 package store
 
 import (
-	"github.com/bootjp/go_twitter_bot_for_nicopedia/sns"
+	"errors"
 	"time"
 
-	"errors"
-
+	"github.com/bootjp/go_twitter_bot_for_nicopedia/sns"
 	"github.com/go-redis/redis"
 )
-
-const dateFormat = "2006-01-02 15:04:05"
 
 // Redis is a convenient type of Redis operation for bot.
 type Redis struct {

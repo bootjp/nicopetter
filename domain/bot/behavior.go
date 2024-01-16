@@ -2,11 +2,11 @@ package bot
 
 import (
 	"fmt"
-	"github.com/bootjp/go_twitter_bot_for_nicopedia/domain/nicopedia"
-	"github.com/mmcdole/gofeed"
 	"net/url"
 	"strings"
 
+	"github.com/bootjp/go_twitter_bot_for_nicopedia/domain/nicopedia"
+	"github.com/mmcdole/gofeed"
 	"github.com/pkg/errors"
 )
 

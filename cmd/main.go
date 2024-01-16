@@ -1,18 +1,14 @@
 package main
 
 import (
-	"os"
-	"strconv"
-
-	"sort"
-
-	"net/url"
-
 	"fmt"
-
 	"log"
-
 	"net/http"
+	"net/url"
+	"os"
+	"sort"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/PuerkitoBio/goquery"
@@ -24,7 +20,6 @@ import (
 	"github.com/mmcdole/gofeed"
 	"github.com/pkg/errors"
 	"github.com/urfave/cli/v2"
-	"strings"
 )
 
 var ErrServer = errors.New("ignore")

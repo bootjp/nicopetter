@@ -3,15 +3,12 @@ package item
 import (
 	"crypto/tls"
 	"io"
-	"time"
-	"unicode/utf8"
-
-	"net/http"
-
 	"log"
-
+	"net/http"
 	"strings"
+	"time"
 	"unicode"
+	"unicode/utf8"
 
 	"github.com/mmcdole/gofeed"
 )
@@ -47,27 +44,32 @@ func Fetch(URL string) ([]*gofeed.Item, error) {
 		}
 	}()
 
-	body, err := io.ReadAll(res.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	// skip no print char
-	printOnly := func(r rune) rune {
-		if !unicode.IsPrint(r) {
-			return -1
-		}
-		if !utf8.ValidRune(r) {
-			return -1
-		}
-		return r
-	}
-
 	p := gofeed.NewParser()
-	f, err := p.ParseString(strings.Map(printOnly, string(body)))
+	f, err := p.Parse(res.Body)
 	if err != nil {
-		log.Println(URL)
-		return nil, err
+		// try parse string with ignore invalid utf8
+		body, err := io.ReadAll(res.Body)
+		if err != nil {
+			return nil, err
+		}
+
+		// skip no print char
+		printOnly := func(r rune) rune {
+			if !unicode.IsPrint(r) {
+				return -1
+			}
+			if !utf8.ValidRune(r) {
+				return -1
+			}
+			return r
+		}
+		f, err = p.ParseString(strings.Map(printOnly, string(body)))
+		if err != nil {
+			log.Println(URL)
+			log.Println(string(body))
+			log.Printf("%+v", err)
+			return nil, err
+		}
 	}
 
 	return f.Items, nil
