@@ -5,7 +5,7 @@ go 1.23
 toolchain go1.24.1
 
 require (
-	github.com/PuerkitoBio/goquery v1.10.1
+	github.com/PuerkitoBio/goquery v1.10.2
 	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/mmcdole/gofeed v1.3.0
 	github.com/pkg/errors v0.9.1
@@ -25,7 +25,7 @@ require (
 	github.com/onsi/gomega v1.18.1 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/xrash/smetrics v0.0.0-20240521201337-686a1a2994c1 // indirect
-	golang.org/x/net v0.33.0 // indirect
-	golang.org/x/sys v0.28.0 // indirect
-	golang.org/x/text v0.21.0 // indirect
+	golang.org/x/net v0.35.0 // indirect
+	golang.org/x/sys v0.30.0 // indirect
+	golang.org/x/text v0.22.0 // indirect
 )
