@@ -111,6 +111,8 @@ func FormatPost(mode *Behavior, meta nicopedia.MetaData, i *gofeed.Item) (string
 		return fmt.Sprintf(mode.TweetFormat, i.Title, meta.FromTitle, i.Link), nil
 	case NicopetterModifyRedirectArticle:
 		return fmt.Sprintf(mode.TweetFormat, i.Title, meta.FromTitle, i.Link), nil
+	case NicopetterNewMovieArticle:
+		return fmt.Sprintf(mode.TweetFormat, i.Title, i.Link), nil
 	default:
 		return "", errors.New("mode is invalid string")
 	}
