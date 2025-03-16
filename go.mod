@@ -1,6 +1,7 @@
 module github.com/bootjp/go_twitter_bot_for_nicopedia
 
-go 1.23
+go 1.23.0
+
 toolchain go1.24.1
 
 require (
