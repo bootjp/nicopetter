@@ -2,7 +2,7 @@ module github.com/bootjp/go_twitter_bot_for_nicopedia
 
 go 1.23.0
 
-toolchain go1.24.2
+toolchain go1.24.3
 
 require (
 	github.com/PuerkitoBio/goquery v1.10.3
@@ -11,7 +11,6 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.9.3
 	github.com/urfave/cli/v2 v2.27.6
-	github.com/urfave/cli/v3 v3.3.1
 	github.com/yitsushi/go-misskey v1.1.6
 )
 
