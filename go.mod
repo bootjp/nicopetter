@@ -2,7 +2,7 @@ module github.com/bootjp/go_twitter_bot_for_nicopedia
 
 go 1.23.0
 
-toolchain go1.24.3
+toolchain go1.24.5
 
 require (
 	github.com/PuerkitoBio/goquery v1.10.3
